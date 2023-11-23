@@ -1,0 +1,63 @@
+:host {
+  display: flex;
+}
+
+.container-calendar {
+  /* background-color: rgb(255, 255, 255);
+  box-shadow: 0 6px 18px 0 rgba(0,45,114,0.15); */
+  padding-top: 5px;  
+}
+
+.calendar {
+  width: 165px;
+  height: 190px;
+  padding: 7px 5px;
+  font-size: 11px;
+}
+
+.day-names {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-items: center;
+  margin-bottom: 5px;
+}
+
+.days-in-month {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0;
+  margin: 0;
+  /* color: rgb(179, 179, 179); */
+  background-color: transparent;
+  width: 155px;
+}
+
+.days-in-month li {
+  justify-self: center;
+  margin: 3px 0;
+  padding: 1px 0;
+  width: 23px;
+  height: 18px;
+  text-align: center;
+}
+
+.days-in-month li:nth-child(7n + 1){
+  border-radius: 25px 0 0 25px;
+}
+
+.days-in-month li:nth-child(7n + 7){
+  border-radius: 0 25px 25px 0;
+}
+
+.days-in-month li.disabled {
+  color: transparent;
+  letter-spacing: -0.8px;
+  cursor: default;
+  font-size: 10px;
+  font-weight: normal;
+  margin: 3px 0;
+  padding: 1px 0;
+  width: 23px;
+  height: 18px;
+}

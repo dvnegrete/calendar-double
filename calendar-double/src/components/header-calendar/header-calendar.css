@@ -1,0 +1,24 @@
+
+header {  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.button-next {
+  background: transparent;
+  border: none;
+}
+
+.button-next img {
+  height: 15px;
+}
+
+.empty {
+  width: 18px;
+}
+
+.inactive {
+  color: rgb(179,179,179);
+}
