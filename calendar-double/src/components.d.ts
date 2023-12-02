@@ -12,9 +12,11 @@ export namespace Components {
     }
     interface CalendarSingle {
         "calendarActive": boolean;
+        "cleanSelection": boolean;
         "dateCalendar": CalendarEntry;
         "numberCalendar": 'main' | 'secondary';
         "setCalendar": CalendarEntry;
+        "typeSelection": 'oneDay' | 'range';
     }
     interface HeaderCalendar {
         "nameInactive": boolean;
@@ -38,6 +40,10 @@ export namespace Components {
         "middle": string;
     }
 }
+export interface CalendarSingleCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCalendarSingleElement;
+}
 export interface HeaderCalendarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeaderCalendarElement;
@@ -49,7 +55,18 @@ declare global {
         prototype: HTMLCalendarDoubleElement;
         new (): HTMLCalendarDoubleElement;
     };
+    interface HTMLCalendarSingleElementEventMap {
+        "daySelectedInCalendarEvent": any;
+    }
     interface HTMLCalendarSingleElement extends Components.CalendarSingle, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLCalendarSingleElementEventMap>(type: K, listener: (this: HTMLCalendarSingleElement, ev: CalendarSingleCustomEvent<HTMLCalendarSingleElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLCalendarSingleElementEventMap>(type: K, listener: (this: HTMLCalendarSingleElement, ev: CalendarSingleCustomEvent<HTMLCalendarSingleElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLCalendarSingleElement: {
         prototype: HTMLCalendarSingleElement;
@@ -91,9 +108,12 @@ declare namespace LocalJSX {
     }
     interface CalendarSingle {
         "calendarActive"?: boolean;
+        "cleanSelection"?: boolean;
         "dateCalendar"?: CalendarEntry;
         "numberCalendar"?: 'main' | 'secondary';
+        "onDaySelectedInCalendarEvent"?: (event: CalendarSingleCustomEvent<any>) => void;
         "setCalendar"?: CalendarEntry;
+        "typeSelection"?: 'oneDay' | 'range';
     }
     interface HeaderCalendar {
         "nameInactive"?: boolean;

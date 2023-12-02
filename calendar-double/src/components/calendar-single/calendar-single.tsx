@@ -1,4 +1,4 @@
-import { Component, Prop, State, Watch, h } from '@stencil/core';
+import { Component, Event, EventEmitter, Prop, State, Watch, h } from '@stencil/core';
 import { CalendarEntry } from '../../utils/interfaces/calendarEntry';
 
 @Component({
@@ -34,6 +34,8 @@ export class CalendarSingle {
     'Diciembre'
   ];
   private year: string;
+  private daySelected: HTMLElement = null;
+  @Prop() typeSelection: 'oneDay' | 'range' = 'oneDay';
   @State() daysInMonth: number[];
   @Watch('daysInMonth')
   renderdaysInMonth(){
@@ -48,6 +50,14 @@ export class CalendarSingle {
   setCalendarChange(newValue: CalendarEntry, oldValue: CalendarEntry){
     if (newValue !== oldValue) {
       this.daysInMonth = this.writeMonth();
+    }
+  }
+
+  @Prop({reflect: true, mutable: true}) cleanSelection: boolean = false;
+  @Watch('cleanSelection')
+  cleanSelectionPropHandler(){
+    if (this.cleanSelection) {
+      this.cleanPreviousSelection();
     }
   }
   private baseNameMonth: string = this.monthNames[this.setCalendar.month];
@@ -109,14 +119,54 @@ export class CalendarSingle {
     this.daysInMonth = this.writeMonth();
   }
 
+  private dayCalendarIsNow(day:number):boolean {
+    const now = new Date();
+    const monthNow = now.getMonth();
+    const dayNow = now.getDate();
+    if (!this.setCalendar || this.setCalendar.month === undefined ) {
+      return false
+    }
+    return this.setCalendar.month === monthNow && day === dayNow;
+  }
+
+  verifyLimit(day:number){
+    //Desarrollar logica para limite deseado
+    if (day) {
+      return true;
+    }
+    return false;
+  }
+
+  cleanPreviousSelection(){
+    if(this.daySelected !== null){
+      this.daySelected.classList.remove('selected');
+    }
+  }
+  @Event({bubbles:true, composed: true}) daySelectedInCalendarEvent: EventEmitter<any>;
+
+  daySelectedHandler(event: MouseEvent, day:number){
+    const isInsideLimit = this.verifyLimit(day);
+    if (isInsideLimit) {
+      this.cleanPreviousSelection();
+      this.daySelected = event.target as HTMLElement;
+      this.daySelected.classList.add('selected');
+    }
+    this.daySelectedInCalendarEvent.emit({name:this.numberCalendar, selected: this.daySelected !== null});
+
+  }
+
   daysInMonthRender(){
     return this.daysInMonth.map( day =>{
-      const combinedClass = '';
+
+      const classIsNow = this.dayCalendarIsNow(day) ? 'is-now' : '';
+      const classInRange = (true) ? 'in-range' : ''; 
+      const combinedClass = [classIsNow, classInRange].filter(Boolean).join(' ');
+
       if (day === 0) {
         return <li class='disabled'>{ day }</li>
       } else {
         return (
-        <li class={combinedClass}>{ day }</li>
+        <li class={combinedClass} onClick={(event: MouseEvent)=> this.daySelectedHandler(event, day)}>{ day }</li>
         )
       }
     })

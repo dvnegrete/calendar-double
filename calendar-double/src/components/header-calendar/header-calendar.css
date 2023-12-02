@@ -9,6 +9,7 @@ header {
 .button-next {
   background: transparent;
   border: none;
+  cursor: pointer;
 }
 
 .button-next img {

@@ -61,3 +61,29 @@
   width: 23px;
   height: 18px;
 }
+
+.days-in-month .selected {
+  background-color: #0075c0;
+  color: #fff;
+}
+
+li.selected:nth-child(7n + 1),
+li.selected:nth-child(7n + 7){
+  border-radius: 50%;
+}
+
+.days-in-month .in-range {
+  color: black;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.is-now {
+  border: solid 1px #0075c0;
+  width: 21px;
+}
+
+li.is-now:nth-child(7n + 1),
+li.is-now:nth-child(7n + 7){
+  border-radius: 25px;
+}

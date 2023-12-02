@@ -32,6 +32,21 @@ export class CalendarDouble {
     this.setDate();
   }
 
+  private daySelectedInMain:boolean = false;
+  private daySelectedInSecondary:boolean = false;
+  @State() shouldCleanDaySelectedInMain = false;
+  @State() shouldCleanDaySelectedInSecondary = false;
+
+  @Listen('daySelectedInCalendarEvent')
+  daySelectedInCalendar(event: CustomEvent){
+    this.daySelectedInMain = this.daySelectedInMain === true ? true : event.detail.name === 'main';
+    this.daySelectedInSecondary = this.daySelectedInSecondary === true ? true : event.detail.name === 'secondary';
+    if(this.daySelectedInMain && this.daySelectedInSecondary){
+      this.shouldCleanDaySelectedInMain = event.detail.name === 'secondary';
+      this.shouldCleanDaySelectedInSecondary = event.detail.name === 'main';
+    }
+  }
+
   @State() setCalendarMain:CalendarEntry = this.getDateNow();
   @State() setCalendarSecond:CalendarEntry = this.getDateNow();
   private getDateNow(): CalendarEntry {
@@ -54,13 +69,14 @@ export class CalendarDouble {
       this.setCalendarSecond.month = 11;
       this.setCalendarSecond.year = --this.setCalendarSecond.year;
     }
-    // console.log("this.setCalendarMain", this.setCalendarMain);
-    // console.log("this.setCalendarSecond", this.setCalendarSecond);
+    if (this.daySelectedInMain || this.daySelectedInSecondary) {
+      this.shouldCleanDaySelectedInMain = true;
+      this.shouldCleanDaySelectedInSecondary = true;      
+    }
     
   }
 
   componentWillLoad(){
-    console.log('componentWillLoad, calendar-double');
     this.setCalendarMain = this.getDateNow();
     this.setDate();
   }
@@ -69,14 +85,18 @@ export class CalendarDouble {
     return (
       <Host>
         <calendar-single
+          typeSelection='oneDay'
           numberCalendar='secondary'
           calendarActive= {this.calendarActive}
           setCalendar={this.setCalendarSecond}
+          cleanSelection={this.shouldCleanDaySelectedInSecondary}
           />
         <calendar-single
+          typeSelection='oneDay'
           numberCalendar='main'
           calendarActive= {this.calendarActive}
           setCalendar={this.setCalendarMain}
+          cleanSelection={this.shouldCleanDaySelectedInMain}
         />
       </Host>
     );
