@@ -56,7 +56,7 @@ declare global {
         new (): HTMLCalendarDoubleElement;
     };
     interface HTMLCalendarSingleElementEventMap {
-        "daySelectedInCalendarEvent": any;
+        "calendarSingleDaySelected": any;
     }
     interface HTMLCalendarSingleElement extends Components.CalendarSingle, HTMLStencilElement {
         addEventListener<K extends keyof HTMLCalendarSingleElementEventMap>(type: K, listener: (this: HTMLCalendarSingleElement, ev: CalendarSingleCustomEvent<HTMLCalendarSingleElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -111,7 +111,7 @@ declare namespace LocalJSX {
         "cleanSelection"?: boolean;
         "dateCalendar"?: CalendarEntry;
         "numberCalendar"?: 'main' | 'secondary';
-        "onDaySelectedInCalendarEvent"?: (event: CalendarSingleCustomEvent<any>) => void;
+        "onCalendarSingleDaySelected"?: (event: CalendarSingleCustomEvent<any>) => void;
         "setCalendar"?: CalendarEntry;
         "typeSelection"?: 'oneDay' | 'range';
     }

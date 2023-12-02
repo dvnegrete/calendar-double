@@ -37,8 +37,8 @@ export class CalendarDouble {
   @State() shouldCleanDaySelectedInMain = false;
   @State() shouldCleanDaySelectedInSecondary = false;
 
-  @Listen('daySelectedInCalendarEvent')
-  daySelectedInCalendar(event: CustomEvent){
+  @Listen('calendarSingleDaySelected')
+  calendarSingleDaySelected(event: CustomEvent){
     this.daySelectedInMain = this.daySelectedInMain === true ? true : event.detail.name === 'main';
     this.daySelectedInSecondary = this.daySelectedInSecondary === true ? true : event.detail.name === 'secondary';
     if(this.daySelectedInMain && this.daySelectedInSecondary){

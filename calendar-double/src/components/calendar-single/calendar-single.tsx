@@ -142,7 +142,7 @@ export class CalendarSingle {
       this.daySelected.classList.remove('selected');
     }
   }
-  @Event({bubbles:true, composed: true}) daySelectedInCalendarEvent: EventEmitter<any>;
+  @Event({bubbles:true, composed: true}) calendarSingleDaySelected: EventEmitter<any>;
 
   daySelectedHandler(event: MouseEvent, day:number){
     const isInsideLimit = this.verifyLimit(day);
@@ -151,7 +151,7 @@ export class CalendarSingle {
       this.daySelected = event.target as HTMLElement;
       this.daySelected.classList.add('selected');
     }
-    this.daySelectedInCalendarEvent.emit({name:this.numberCalendar, selected: this.daySelected !== null});
+    this.calendarSingleDaySelected.emit({name:this.numberCalendar, selected: this.daySelected !== null});
 
   }
 
