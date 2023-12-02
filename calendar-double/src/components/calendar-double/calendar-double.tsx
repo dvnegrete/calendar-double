@@ -11,20 +11,25 @@ export class CalendarDouble {
   @State() calendarActive = false;
   @Listen('previousMonthCalendar')
   previousMonthCalendarEvent(){
-    console.log('previousMonthCalendar');
+    this.setCalendarMain = {
+      day: this.setCalendarSecond.day,
+      month: this.setCalendarSecond.month,
+      year: this.setCalendarSecond.year
+    }
+    this.setDate();
   }
   @Listen('nextMonthCalendar')
   nextMonthCalendarEvent(){
-    // this.setCalendarMain = {
-    //   day: this.setCalendarMain.day,
-    //   month: this.setCalendarMain.month + 1,
-    //   year: this.setCalendarMain.year
-    // }
-    // if (this.setCalendarMain.month === 12) {
-    //   this.setCalendarMain.month = 0;
-    //   this.setCalendarMain.year = this.setCalendarMain.year + 1;
-    // }
-    console.log('nextMonthCalendarEvent', this.setCalendarMain);
+    this.setCalendarMain = {
+      day: this.setCalendarMain.day,
+      month: this.setCalendarMain.month + 1,
+      year: this.setCalendarMain.year
+    }
+    if (this.setCalendarMain.month === 12) {
+      this.setCalendarMain.month = 0;
+      this.setCalendarMain.year = this.setCalendarMain.year + 1;
+    }
+    this.setDate();
   }
 
   @State() setCalendarMain:CalendarEntry = this.getDateNow();
@@ -40,19 +45,27 @@ export class CalendarDouble {
   }
 
   setDate(){
-    this.setCalendarMain = this.getDateNow();
     this.setCalendarSecond = {
       day: 1,
       month: this.setCalendarMain.month - 1,
       year: this.setCalendarMain.year
     }
-    console.log("this.setCalendarMain", this.setCalendarMain);
-    console.log("this.setCalendarSecond", this.setCalendarSecond);
+    if (this.setCalendarSecond.month === -1) {
+      this.setCalendarSecond.month = 11;
+      this.setCalendarSecond.year = --this.setCalendarSecond.year;
+    }
+    // console.log("this.setCalendarMain", this.setCalendarMain);
+    // console.log("this.setCalendarSecond", this.setCalendarSecond);
     
   }
 
-  render() {
+  componentWillLoad(){
+    console.log('componentWillLoad, calendar-double');
+    this.setCalendarMain = this.getDateNow();
     this.setDate();
+  }
+
+  render() {
     return (
       <Host>
         <calendar-single

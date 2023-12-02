@@ -21,6 +21,7 @@ export namespace Components {
         "nameMonth": string;
         "position": 'left' | 'right';
         "twoArrow": boolean;
+        "year": string;
     }
     interface MyComponent {
         /**
@@ -101,6 +102,7 @@ declare namespace LocalJSX {
         "onPreviousMonthCalendar"?: (event: HeaderCalendarCustomEvent<any>) => void;
         "position"?: 'left' | 'right';
         "twoArrow"?: boolean;
+        "year"?: string;
     }
     interface MyComponent {
         /**

@@ -33,15 +33,22 @@ export class CalendarSingle {
     'Noviembre',
     'Diciembre'
   ];
+  private year: string;
   @State() daysInMonth: number[];
+  @Watch('daysInMonth')
+  renderdaysInMonth(){
+    this.daysInMonthRender();
+  }
   @Prop() dateCalendar: CalendarEntry;
   @Prop() numberCalendar: 'main' | 'secondary' = null;
   @Prop() calendarActive: boolean = null;
-  @Prop() setCalendar: CalendarEntry = {month:1, year:2020, day:1};
   @State() valueCalendar: CalendarEntry;
+  @Prop({ reflect: true, mutable: true }) setCalendar: CalendarEntry = {month:1, year:2020, day:1};
   @Watch('setCalendar')
-  setCalendarChange(){
-    this.valueCalendar = this.setCalendar;
+  setCalendarChange(newValue: CalendarEntry, oldValue: CalendarEntry){
+    if (newValue !== oldValue) {
+      this.daysInMonth = this.writeMonth();
+    }
   }
   private baseNameMonth: string = this.monthNames[this.setCalendar.month];
   private startDay(date: CalendarEntry){
@@ -86,27 +93,42 @@ export class CalendarSingle {
 
   private writeMonth ():number[] {
     let content = [];
-    this.setCalendarChange();
-    console.log(this.valueCalendar);
+    this.valueCalendar = this.setCalendar;
     for (let i = this.startDay(this.valueCalendar); i > 0; i--) {
       content.push(0);
     }
     this.baseNameMonth = this.monthNames[this.valueCalendar.month];
+    this.year = String(this.setCalendar.year);
     for (let i = 1; i <= this.getTotalDays(this.valueCalendar); i++) {
       content.push(i);
     }
     return content;
   }
 
-  render() {
+  componentWillLoad(){
     this.daysInMonth = this.writeMonth();
-    
-    //const baseNameMonth: string = this.monthNames[this.valueCalendar.month]
+  }
+
+  daysInMonthRender(){
+    return this.daysInMonth.map( day =>{
+      const combinedClass = '';
+      if (day === 0) {
+        return <li class='disabled'>{ day }</li>
+      } else {
+        return (
+        <li class={combinedClass}>{ day }</li>
+        )
+      }
+    })
+  }
+
+  render() {
     return (
       <div class='container-calendar'>
         <div class='calendar'>
           <header-calendar 
             name-month={ this.baseNameMonth }
+            year={ this.year }
             position={ this.numberCalendar === 'main' ? 'right' : 'left' }
             name-inactive={ !this.calendarActive }
           ></header-calendar>
@@ -118,16 +140,7 @@ export class CalendarSingle {
           </div>
 
             <ol class='days-in-month'>
-              { this.daysInMonth.map( day =>{
-                const combinedClass = '';
-                if (day === 0) {
-                  return <li class='disabled'>{ day }</li>
-                } else {
-                  return (
-                  <li class={combinedClass}>{ day }</li>
-                  )
-                }
-              }) }
+              { this.daysInMonthRender() }
             </ol>
 
         </div>

@@ -7,6 +7,7 @@ import { Component, Event, EventEmitter, Prop, h } from '@stencil/core';
 })
 export class HeaderCalendar {
   @Prop() nameMonth: string;
+  @Prop() year: string;
   @Prop() nameInactive = false;
   @Prop() position: 'left' | 'right' = null;
   @Prop() twoArrow = false;
@@ -22,7 +23,7 @@ export class HeaderCalendar {
         </button>
         : <div class='empty'></div>
         }
-        <span class={ this.nameInactive ? 'inactive' : '' }>{this.nameMonth}</span> 
+        <span class={ this.nameInactive ? 'inactive' : '' }>{ this.nameMonth } { this.year }</span> 
         { this.twoArrow || this.position === 'right' ? 
           <button class='button-next' onClick={ ()=> this.nextMonthCalendar.emit() }>
             <img src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg" alt="siguiente" />
