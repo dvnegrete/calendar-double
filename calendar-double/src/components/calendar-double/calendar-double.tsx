@@ -1,5 +1,6 @@
-import { Component, Host, Listen, State, h } from '@stencil/core';
-import { CalendarEntry } from '../../components';
+import { Component, Event, EventEmitter, Host, Listen, Prop, State, h } from '@stencil/core';
+import { CalendarEntry } from './../../utils/interfaces/calendarEntry';
+import { PositionRange } from '../../components';
 
 @Component({
   tag: 'calendar-double',
@@ -8,8 +9,9 @@ import { CalendarEntry } from '../../components';
 })
 
 export class CalendarDouble {
-  @State() calendarActive = false;
-  @Listen('previousMonthCalendar')
+  @Prop() typeSelection: 'oneDay' | 'range' = null;
+  @State() calendarActive = true;
+  @Listen('dvnPreviousMonthCalendar')
   previousMonthCalendarEvent(){
     this.setCalendarMain = {
       day: this.setCalendarSecond.day,
@@ -18,7 +20,7 @@ export class CalendarDouble {
     }
     this.setDate();
   }
-  @Listen('nextMonthCalendar')
+  @Listen('dvnNextMonthCalendar')
   nextMonthCalendarEvent(){
     this.setCalendarMain = {
       day: this.setCalendarMain.day,
@@ -37,14 +39,51 @@ export class CalendarDouble {
   @State() shouldCleanDaySelectedInMain = false;
   @State() shouldCleanDaySelectedInSecondary = false;
 
-  @Listen('calendarSingleDaySelected')
+  private firstDayForRange: CalendarEntry = null;
+  private lastDayForRange: CalendarEntry = null;
+
+  @State() positionRangeMain: PositionRange | number = null;
+  @State() positionRangeSecondary: PositionRange | number = null;
+
+  @Event({eventName:'dvnApplicationDate', bubbles:true, composed: true}) applicationDate: EventEmitter<CalendarEntry>;
+  @Event({eventName:'dvnStartDate', bubbles:true, composed: true}) startDate: EventEmitter<CalendarEntry>;
+  @Event({eventName:'dvnEndDate', bubbles:true, composed: true}) endDate: EventEmitter<CalendarEntry>;
+
+  @Listen('dvnCalendarSingleDaySelected')
   calendarSingleDaySelected(event: CustomEvent){
     this.daySelectedInMain = this.daySelectedInMain === true ? true : event.detail.name === 'main';
     this.daySelectedInSecondary = this.daySelectedInSecondary === true ? true : event.detail.name === 'secondary';
-    if(this.daySelectedInMain && this.daySelectedInSecondary){
+    if(this.typeSelection === 'oneDay' && this.daySelectedInMain && this.daySelectedInSecondary){
       this.shouldCleanDaySelectedInMain = event.detail.name === 'secondary';
       this.shouldCleanDaySelectedInSecondary = event.detail.name === 'main';
     }
+    
+    if (this.typeSelection === 'oneDay') {
+      this.applicationDate.emit(event.detail.date);
+    } else {
+      if (this.firstDayForRange === null) {
+        this.firstDayForRange = event.detail.date;
+      } else if (this.lastDayForRange === null) {
+        this.lastDayForRange = event.detail.date;
+      } else {
+        //console.log("limpiar variables de rango");
+        // this.shouldCleanDaySelectedInMain = event.detail.name === 'secondary';
+        // this.shouldCleanDaySelectedInSecondary = event.detail.name === 'main';
+        this.firstDayForRange = event.detail.date;
+        this.positionRangeMain = event.detail.name === 'main' ? event.detail.date.day : null;
+        this.positionRangeSecondary = event.detail.name === 'secondary' ? event.detail.date.day : null;
+        this.cleanPreviousSelection()
+        console.log('this.positionRangeMain, this.positionRangeSecondary', this.positionRangeMain, this.positionRangeSecondary);
+      }
+      //console.log('this.firstDayForRange, this.lastDayForRange', this.firstDayForRange, this.lastDayForRange);
+    }
+  }
+
+  cleanPreviousSelection(){
+    this.shouldCleanDaySelectedInMain = true;
+    this.shouldCleanDaySelectedInSecondary = true;
+    this.firstDayForRange = null;
+    this.lastDayForRange = null;
   }
 
   @State() setCalendarMain:CalendarEntry = this.getDateNow();
@@ -71,7 +110,7 @@ export class CalendarDouble {
     }
     if (this.daySelectedInMain || this.daySelectedInSecondary) {
       this.shouldCleanDaySelectedInMain = true;
-      this.shouldCleanDaySelectedInSecondary = true;      
+      this.shouldCleanDaySelectedInSecondary = true;
     }
     
   }
@@ -85,18 +124,20 @@ export class CalendarDouble {
     return (
       <Host>
         <calendar-single
-          typeSelection='oneDay'
+          typeSelection={ this.typeSelection }
           numberCalendar='secondary'
           calendarActive= {this.calendarActive}
           setCalendar={this.setCalendarSecond}
           cleanSelection={this.shouldCleanDaySelectedInSecondary}
-          />
+          positionRange={this.positionRangeSecondary}
+        />
         <calendar-single
-          typeSelection='oneDay'
+          typeSelection={ this.typeSelection }
           numberCalendar='main'
           calendarActive= {this.calendarActive}
           setCalendar={this.setCalendarMain}
           cleanSelection={this.shouldCleanDaySelectedInMain}
+          positionRange={this.positionRangeMain}
         />
       </Host>
     );

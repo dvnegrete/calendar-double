@@ -1,0 +1,66 @@
+:host {
+  display: block;
+}
+
+.container {
+  background-color: var(--secondary-color,#fff);
+  border-radius: 4px;
+  box-shadow: 0px 6px 18px 0px rgba(0, 45 , 114, 0.15);
+  position: absolute;
+  width: 500px;
+  height: 310px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 380px 148px;
+  grid-template-rows: 45px 210px 55px;
+  grid-template-areas: 
+  'header header'
+  'calendar period'
+  'days button';
+}
+
+.hidden {
+  display: none;
+}
+
+.type-selection {
+  grid-area: header;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 40px;
+  width: inherit;
+  border-bottom: 1px solid var(--inactive-color, rgb(179,179,179));
+  padding-bottom: 4px;
+  font-size: 12px;
+}
+
+.type-selection label {
+  padding: 7px;
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.calendar {
+  grid-area: calendar;
+}
+
+.button-continue {
+  grid-area: button;
+  height: 32px;
+  width: 96px;
+  background-color: var(--primary-color, #056dae);
+  color: var(--inactive-color, rgb(179, 179, 179));
+  font-size: 14px;
+  font-weight: normal;
+  border: none;
+  border-radius: 6px;
+  justify-self: center;
+  align-self: center;
+}
+
+.completed {
+  cursor: pointer;
+  color: var(--secondary-color, #fff);
+}

@@ -6,17 +6,23 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CalendarEntry } from "./utils/interfaces/calendarEntry";
+import { PositionRange } from "./utils/enum/positionRange";
 export { CalendarEntry } from "./utils/interfaces/calendarEntry";
+export { PositionRange } from "./utils/enum/positionRange";
 export namespace Components {
     interface CalendarDouble {
+        "typeSelection": 'oneDay' | 'range';
     }
     interface CalendarSingle {
         "calendarActive": boolean;
         "cleanSelection": boolean;
         "dateCalendar": CalendarEntry;
         "numberCalendar": 'main' | 'secondary';
+        "positionRange": PositionRange | number;
         "setCalendar": CalendarEntry;
         "typeSelection": 'oneDay' | 'range';
+    }
+    interface DoubleCalendarContainer {
     }
     interface HeaderCalendar {
         "nameInactive": boolean;
@@ -40,6 +46,10 @@ export namespace Components {
         "middle": string;
     }
 }
+export interface CalendarDoubleCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCalendarDoubleElement;
+}
 export interface CalendarSingleCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLCalendarSingleElement;
@@ -49,14 +59,27 @@ export interface HeaderCalendarCustomEvent<T> extends CustomEvent<T> {
     target: HTMLHeaderCalendarElement;
 }
 declare global {
+    interface HTMLCalendarDoubleElementEventMap {
+        "dvnApplicationDate": CalendarEntry;
+        "dvnStartDate": CalendarEntry;
+        "dvnEndDate": CalendarEntry;
+    }
     interface HTMLCalendarDoubleElement extends Components.CalendarDouble, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLCalendarDoubleElementEventMap>(type: K, listener: (this: HTMLCalendarDoubleElement, ev: CalendarDoubleCustomEvent<HTMLCalendarDoubleElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLCalendarDoubleElementEventMap>(type: K, listener: (this: HTMLCalendarDoubleElement, ev: CalendarDoubleCustomEvent<HTMLCalendarDoubleElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLCalendarDoubleElement: {
         prototype: HTMLCalendarDoubleElement;
         new (): HTMLCalendarDoubleElement;
     };
     interface HTMLCalendarSingleElementEventMap {
-        "calendarSingleDaySelected": any;
+        "dvnCalendarSingleDaySelected": any;
     }
     interface HTMLCalendarSingleElement extends Components.CalendarSingle, HTMLStencilElement {
         addEventListener<K extends keyof HTMLCalendarSingleElementEventMap>(type: K, listener: (this: HTMLCalendarSingleElement, ev: CalendarSingleCustomEvent<HTMLCalendarSingleElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -72,9 +95,15 @@ declare global {
         prototype: HTMLCalendarSingleElement;
         new (): HTMLCalendarSingleElement;
     };
+    interface HTMLDoubleCalendarContainerElement extends Components.DoubleCalendarContainer, HTMLStencilElement {
+    }
+    var HTMLDoubleCalendarContainerElement: {
+        prototype: HTMLDoubleCalendarContainerElement;
+        new (): HTMLDoubleCalendarContainerElement;
+    };
     interface HTMLHeaderCalendarElementEventMap {
-        "nextMonthCalendar": any;
-        "previousMonthCalendar": any;
+        "dvnNextMonthCalendar": any;
+        "dvnPreviousMonthCalendar": any;
     }
     interface HTMLHeaderCalendarElement extends Components.HeaderCalendar, HTMLStencilElement {
         addEventListener<K extends keyof HTMLHeaderCalendarElementEventMap>(type: K, listener: (this: HTMLHeaderCalendarElement, ev: HeaderCalendarCustomEvent<HTMLHeaderCalendarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -99,27 +128,35 @@ declare global {
     interface HTMLElementTagNameMap {
         "calendar-double": HTMLCalendarDoubleElement;
         "calendar-single": HTMLCalendarSingleElement;
+        "double-calendar-container": HTMLDoubleCalendarContainerElement;
         "header-calendar": HTMLHeaderCalendarElement;
         "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
     interface CalendarDouble {
+        "onDvnApplicationDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
+        "onDvnEndDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
+        "onDvnStartDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
+        "typeSelection"?: 'oneDay' | 'range';
     }
     interface CalendarSingle {
         "calendarActive"?: boolean;
         "cleanSelection"?: boolean;
         "dateCalendar"?: CalendarEntry;
         "numberCalendar"?: 'main' | 'secondary';
-        "onCalendarSingleDaySelected"?: (event: CalendarSingleCustomEvent<any>) => void;
+        "onDvnCalendarSingleDaySelected"?: (event: CalendarSingleCustomEvent<any>) => void;
+        "positionRange"?: PositionRange | number;
         "setCalendar"?: CalendarEntry;
         "typeSelection"?: 'oneDay' | 'range';
+    }
+    interface DoubleCalendarContainer {
     }
     interface HeaderCalendar {
         "nameInactive"?: boolean;
         "nameMonth"?: string;
-        "onNextMonthCalendar"?: (event: HeaderCalendarCustomEvent<any>) => void;
-        "onPreviousMonthCalendar"?: (event: HeaderCalendarCustomEvent<any>) => void;
+        "onDvnNextMonthCalendar"?: (event: HeaderCalendarCustomEvent<any>) => void;
+        "onDvnPreviousMonthCalendar"?: (event: HeaderCalendarCustomEvent<any>) => void;
         "position"?: 'left' | 'right';
         "twoArrow"?: boolean;
         "year"?: string;
@@ -141,6 +178,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "calendar-double": CalendarDouble;
         "calendar-single": CalendarSingle;
+        "double-calendar-container": DoubleCalendarContainer;
         "header-calendar": HeaderCalendar;
         "my-component": MyComponent;
     }
@@ -151,6 +189,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "calendar-double": LocalJSX.CalendarDouble & JSXBase.HTMLAttributes<HTMLCalendarDoubleElement>;
             "calendar-single": LocalJSX.CalendarSingle & JSXBase.HTMLAttributes<HTMLCalendarSingleElement>;
+            "double-calendar-container": LocalJSX.DoubleCalendarContainer & JSXBase.HTMLAttributes<HTMLDoubleCalendarContainerElement>;
             "header-calendar": LocalJSX.HeaderCalendar & JSXBase.HTMLAttributes<HTMLHeaderCalendarElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }

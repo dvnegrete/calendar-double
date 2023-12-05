@@ -1,5 +1,6 @@
 import { Component, Event, EventEmitter, Prop, State, Watch, h } from '@stencil/core';
 import { CalendarEntry } from '../../utils/interfaces/calendarEntry';
+import { PositionRange } from '../../utils/enum/positionRange';
 
 @Component({
   tag: 'calendar-single',
@@ -34,7 +35,9 @@ export class CalendarSingle {
     'Diciembre'
   ];
   private year: string;
-  private daySelected: HTMLElement = null;
+  private oneDaySelected: HTMLElement = null;
+  private twoDaySelected: HTMLElement = null;
+
   @Prop() typeSelection: 'oneDay' | 'range' = 'oneDay';
   @State() daysInMonth: number[];
   @Watch('daysInMonth')
@@ -57,6 +60,8 @@ export class CalendarSingle {
   @Watch('cleanSelection')
   cleanSelectionPropHandler(){
     if (this.cleanSelection) {
+      console.log(this.numberCalendar, 'cleanSelectionPropHandler');
+      
       this.cleanPreviousSelection();
     }
   }
@@ -137,22 +142,81 @@ export class CalendarSingle {
     return false;
   }
 
-  cleanPreviousSelection(){
-    if(this.daySelected !== null){
-      this.daySelected.classList.remove('selected');
+  cleanOneDaySelected(){
+    if (this.oneDaySelected !== null) {
+      this.oneDaySelected.classList.remove('selected');
     }
   }
-  @Event({bubbles:true, composed: true}) calendarSingleDaySelected: EventEmitter<any>;
+
+  cleanPreviousSelection(){
+    //console.log('this.oneDaySelected, this.twoDaySelected', this.oneDaySelected, this.twoDaySelected);
+    if(Number.isInteger(this.positionRange) && this.twoDaySelected !== null && this.oneDaySelected !== null){
+      console.log(">>>>> ", this.numberCalendar, this.oneDaySelected, this.twoDaySelected);
+      this.oneDaySelected = this.twoDaySelected;
+      console.log(">>>>> reasignado en ",this.oneDaySelected, this.twoDaySelected);
+    } else if(this.oneDaySelected !== null) {
+      this.cleanOneDaySelected();
+      this.oneDaySelected = null;
+    }
+    if (this.twoDaySelected !== null) {
+      this.twoDaySelected.classList.remove('selected');
+      this.twoDaySelected = null;
+      
+    }
+  }
+
+  @Event({bubbles:true, composed: true}) dvnCalendarSingleDaySelected: EventEmitter<any>;
+
+  @Prop() positionRange: PositionRange | number = null;
+  @Watch('positionRange')
+  changePositionRange(newValue: PositionRange|number, oldValue:PositionRange|number){
+    if(newValue !== oldValue && Number.isInteger(newValue)){
+      this.cleanPreviousSelection();
+      // console.log(this.numberCalendar, 'old', oldValue)
+      // console.log(this.numberCalendar, 'newValue', newValue)
+      // console.log('this.oneDaySelected', this.oneDaySelected)
+      // console.log('this.twoDaySelected', this.twoDaySelected)
+    }
+  }
+
+  sendDateSelected(day: number){
+    const selectedDate: CalendarEntry = {
+      day,
+      month: this.setCalendar.month,
+      year: this.setCalendar.year
+    }
+    const objEmit = {
+      name: this.numberCalendar,
+      // selected: this.oneDaySelected !== null,
+      date: selectedDate
+    }
+    this.dvnCalendarSingleDaySelected.emit(objEmit);
+  }
 
   daySelectedHandler(event: MouseEvent, day:number){
     const isInsideLimit = this.verifyLimit(day);
-    if (isInsideLimit) {
+    if (isInsideLimit && this.typeSelection === 'oneDay') {
       this.cleanPreviousSelection();
-      this.daySelected = event.target as HTMLElement;
-      this.daySelected.classList.add('selected');
+      this.oneDaySelected = event.target as HTMLElement;
+      this.oneDaySelected.classList.add('selected');
+      this.sendDateSelected(day);
+    } else if (isInsideLimit && this.typeSelection === 'range'){      
+      if (this.oneDaySelected === null) {
+        this.oneDaySelected = event.target as HTMLElement;
+        this.oneDaySelected.classList.add('selected');
+      } else if(this.twoDaySelected === null){
+        this.twoDaySelected = event.target as HTMLElement;
+        this.twoDaySelected.classList.add('selected');
+      } else {
+        this.cleanOneDaySelected();
+        this.oneDaySelected = event.target as HTMLElement;
+        this.oneDaySelected.classList.add('selected');
+      }
+      console.log("EMIT!!!!", this.numberCalendar, "oneDaySelected", this.oneDaySelected);
+      console.log(this.numberCalendar, "twoDaySelected", this.twoDaySelected);
+      
+      this.sendDateSelected(day);
     }
-    this.calendarSingleDaySelected.emit({name:this.numberCalendar, selected: this.daySelected !== null});
-
   }
 
   daysInMonthRender(){
