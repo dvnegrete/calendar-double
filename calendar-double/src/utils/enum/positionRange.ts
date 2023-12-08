@@ -1,5 +1,6 @@
 export enum PositionRange {
     'firstDay',
     'lastDay',
-    'all'    
+    'all',
+    'empty',
 }

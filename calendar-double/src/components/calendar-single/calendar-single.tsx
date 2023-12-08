@@ -42,7 +42,10 @@ export class CalendarSingle {
   @State() daysInMonth: number[];
   @Watch('daysInMonth')
   renderdaysInMonth(){
+    console.log(this.numberCalendar,this.oneDaySelected, this.twoDaySelected);
+    this.cleanPreviousSelection();
     this.daysInMonthRender();
+    
   }
   @Prop() dateCalendar: CalendarEntry;
   @Prop() numberCalendar: 'main' | 'secondary' = null;
@@ -59,9 +62,7 @@ export class CalendarSingle {
   @Prop({reflect: true, mutable: true}) cleanSelection: boolean = false;
   @Watch('cleanSelection')
   cleanSelectionPropHandler(){
-    if (this.cleanSelection) {
-      console.log(this.numberCalendar, 'cleanSelectionPropHandler');
-      
+    if (this.cleanSelection) {      
       this.cleanPreviousSelection();
     }
   }
@@ -146,23 +147,21 @@ export class CalendarSingle {
     if (this.oneDaySelected !== null) {
       this.oneDaySelected.classList.remove('selected');
     }
+    if (this.twoDaySelected !== null) {
+      this.twoDaySelected.classList.remove('selected');
+    }
   }
 
   cleanPreviousSelection(){
-    //console.log('this.oneDaySelected, this.twoDaySelected', this.oneDaySelected, this.twoDaySelected);
-    if(Number.isInteger(this.positionRange) && this.twoDaySelected !== null && this.oneDaySelected !== null){
-      console.log(">>>>> ", this.numberCalendar, this.oneDaySelected, this.twoDaySelected);
-      this.oneDaySelected = this.twoDaySelected;
-      console.log(">>>>> reasignado en ",this.oneDaySelected, this.twoDaySelected);
-    } else if(this.oneDaySelected !== null) {
+    if(this.oneDaySelected !== null) {
       this.cleanOneDaySelected();
       this.oneDaySelected = null;
     }
     if (this.twoDaySelected !== null) {
       this.twoDaySelected.classList.remove('selected');
-      this.twoDaySelected = null;
-      
+      this.twoDaySelected = null;      
     }
+     
   }
 
   @Event({bubbles:true, composed: true}) dvnCalendarSingleDaySelected: EventEmitter<any>;
@@ -170,12 +169,17 @@ export class CalendarSingle {
   @Prop() positionRange: PositionRange | number = null;
   @Watch('positionRange')
   changePositionRange(newValue: PositionRange|number, oldValue:PositionRange|number){
+    if (this.cleanSelection) {
+      //console.log('CLEANSELECTION', this.numberCalendar, '>>>>>>>', this.cleanSelection)
+      this.cleanPreviousSelection();
+    }
+    if (this.positionRange !== null) {
+      // console.log('positionRange: renderdaysInMonth------>daysInMonthRender', this.positionRange);
+      this.oneDaySelected = this.saveElementHTML;
+      this.saveElementHTML = null;
+    }
     if(newValue !== oldValue && Number.isInteger(newValue)){
       this.cleanPreviousSelection();
-      // console.log(this.numberCalendar, 'old', oldValue)
-      // console.log(this.numberCalendar, 'newValue', newValue)
-      // console.log('this.oneDaySelected', this.oneDaySelected)
-      // console.log('this.twoDaySelected', this.twoDaySelected)
     }
   }
 
@@ -187,7 +191,6 @@ export class CalendarSingle {
     }
     const objEmit = {
       name: this.numberCalendar,
-      // selected: this.oneDaySelected !== null,
       date: selectedDate
     }
     this.dvnCalendarSingleDaySelected.emit(objEmit);
@@ -201,30 +204,36 @@ export class CalendarSingle {
       this.oneDaySelected.classList.add('selected');
       this.sendDateSelected(day);
     } else if (isInsideLimit && this.typeSelection === 'range'){      
-      if (this.oneDaySelected === null) {
-        this.oneDaySelected = event.target as HTMLElement;
-        this.oneDaySelected.classList.add('selected');
-      } else if(this.twoDaySelected === null){
-        this.twoDaySelected = event.target as HTMLElement;
-        this.twoDaySelected.classList.add('selected');
-      } else {
-        this.cleanOneDaySelected();
-        this.oneDaySelected = event.target as HTMLElement;
-        this.oneDaySelected.classList.add('selected');
-      }
-      console.log("EMIT!!!!", this.numberCalendar, "oneDaySelected", this.oneDaySelected);
-      console.log(this.numberCalendar, "twoDaySelected", this.twoDaySelected);
-      
+      this.markSelection(event.target as HTMLElement)
       this.sendDateSelected(day);
+    }
+    console.log(this.oneDaySelected, this.twoDaySelected);
+  }
+
+  private saveElementHTML: HTMLElement = null;
+
+  markSelection(element: HTMLElement){
+    this.saveElementHTML = element;
+    if (this.oneDaySelected === null) {
+      this.oneDaySelected = element;
+      this.oneDaySelected.classList.add('selected');
+    } else if(this.twoDaySelected === null){
+      this.twoDaySelected = element;
+      this.twoDaySelected.classList.add('selected');
+    } else {
+      this.cleanOneDaySelected();
+      this.oneDaySelected = element;
+      this.oneDaySelected.classList.add('selected');
     }
   }
 
   daysInMonthRender(){
-    return this.daysInMonth.map( day =>{
+    return this.daysInMonth.map( day =>{      
 
       const classIsNow = this.dayCalendarIsNow(day) ? 'is-now' : '';
       const classInRange = (true) ? 'in-range' : ''; 
-      const combinedClass = [classIsNow, classInRange].filter(Boolean).join(' ');
+      const classSelected = day === this.positionRange ? 'selected' : '';
+      const combinedClass = [classIsNow, classInRange, classSelected].filter(Boolean).join(' ');
 
       if (day === 0) {
         return <li class='disabled'>{ day }</li>

@@ -13,6 +13,8 @@ export class CalendarDouble {
   @State() calendarActive = true;
   @Listen('dvnPreviousMonthCalendar')
   previousMonthCalendarEvent(){
+    // this.shouldCleanDaySelected = false;
+    // this.cleanPreviousSelection();
     this.setCalendarMain = {
       day: this.setCalendarSecond.day,
       month: this.setCalendarSecond.month,
@@ -22,6 +24,8 @@ export class CalendarDouble {
   }
   @Listen('dvnNextMonthCalendar')
   nextMonthCalendarEvent(){
+    // this.shouldCleanDaySelected = false;
+    // this.cleanPreviousSelection();
     this.setCalendarMain = {
       day: this.setCalendarMain.day,
       month: this.setCalendarMain.month + 1,
@@ -36,8 +40,8 @@ export class CalendarDouble {
 
   private daySelectedInMain:boolean = false;
   private daySelectedInSecondary:boolean = false;
-  @State() shouldCleanDaySelectedInMain = false;
-  @State() shouldCleanDaySelectedInSecondary = false;
+  @State() shouldCleanDaySelected = false;
+  //@State() shouldCleanDaySelectedInSecondary = false;
 
   private firstDayForRange: CalendarEntry = null;
   private lastDayForRange: CalendarEntry = null;
@@ -51,11 +55,13 @@ export class CalendarDouble {
 
   @Listen('dvnCalendarSingleDaySelected')
   calendarSingleDaySelected(event: CustomEvent){
+    this.shouldCleanDaySelected = false;
     this.daySelectedInMain = this.daySelectedInMain === true ? true : event.detail.name === 'main';
     this.daySelectedInSecondary = this.daySelectedInSecondary === true ? true : event.detail.name === 'secondary';
     if(this.typeSelection === 'oneDay' && this.daySelectedInMain && this.daySelectedInSecondary){
-      this.shouldCleanDaySelectedInMain = event.detail.name === 'secondary';
-      this.shouldCleanDaySelectedInSecondary = event.detail.name === 'main';
+      this.shouldCleanDaySelected = true;
+      //this.shouldCleanDaySelected = event.detail.name === 'secondary';
+      //this.shouldCleanDaySelectedInSecondary = event.detail.name === 'main';
     }
     
     if (this.typeSelection === 'oneDay') {
@@ -66,22 +72,25 @@ export class CalendarDouble {
       } else if (this.lastDayForRange === null) {
         this.lastDayForRange = event.detail.date;
       } else {
-        //console.log("limpiar variables de rango");
         // this.shouldCleanDaySelectedInMain = event.detail.name === 'secondary';
         // this.shouldCleanDaySelectedInSecondary = event.detail.name === 'main';
-        this.firstDayForRange = event.detail.date;
+        this.positionRangeMain = null;
+        this.positionRangeSecondary = null;
         this.positionRangeMain = event.detail.name === 'main' ? event.detail.date.day : null;
         this.positionRangeSecondary = event.detail.name === 'secondary' ? event.detail.date.day : null;
         this.cleanPreviousSelection()
-        console.log('this.positionRangeMain, this.positionRangeSecondary', this.positionRangeMain, this.positionRangeSecondary);
+        this.firstDayForRange = event.detail.date;
+        // console.log('this.positionRangeMain', this.positionRangeMain);
+        // console.log('this.positionRangeSecondary', this.positionRangeSecondary);
       }
-      //console.log('this.firstDayForRange, this.lastDayForRange', this.firstDayForRange, this.lastDayForRange);
+      // console.log('this.firstDayForRange, ', this.firstDayForRange);
+      // console.log('this.lastDayForRange', this.lastDayForRange);
     }
   }
 
   cleanPreviousSelection(){
-    this.shouldCleanDaySelectedInMain = true;
-    this.shouldCleanDaySelectedInSecondary = true;
+    this.shouldCleanDaySelected = true;
+    //this.shouldCleanDaySelectedInSecondary = true;
     this.firstDayForRange = null;
     this.lastDayForRange = null;
   }
@@ -109,8 +118,8 @@ export class CalendarDouble {
       this.setCalendarSecond.year = --this.setCalendarSecond.year;
     }
     if (this.daySelectedInMain || this.daySelectedInSecondary) {
-      this.shouldCleanDaySelectedInMain = true;
-      this.shouldCleanDaySelectedInSecondary = true;
+      this.shouldCleanDaySelected = true;
+      //this.shouldCleanDaySelectedInSecondary = true;
     }
     
   }
@@ -128,7 +137,7 @@ export class CalendarDouble {
           numberCalendar='secondary'
           calendarActive= {this.calendarActive}
           setCalendar={this.setCalendarSecond}
-          cleanSelection={this.shouldCleanDaySelectedInSecondary}
+          cleanSelection={this.shouldCleanDaySelected}
           positionRange={this.positionRangeSecondary}
         />
         <calendar-single
@@ -136,7 +145,7 @@ export class CalendarDouble {
           numberCalendar='main'
           calendarActive= {this.calendarActive}
           setCalendar={this.setCalendarMain}
-          cleanSelection={this.shouldCleanDaySelectedInMain}
+          cleanSelection={this.shouldCleanDaySelected}
           positionRange={this.positionRangeMain}
         />
       </Host>
