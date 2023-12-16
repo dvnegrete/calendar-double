@@ -36,17 +36,18 @@ export class CalendarSingle {
   ];
   private year: string;
   private oneDaySelected: HTMLElement = null;
-  private twoDaySelected: HTMLElement = null;
+  //private twoDaySelected: HTMLElement = null;
 
   @Prop() typeSelection: 'oneDay' | 'range' = 'oneDay';
   @State() daysInMonth: number[];
   @Watch('daysInMonth')
   renderdaysInMonth(){
-    console.log(this.numberCalendar,this.oneDaySelected, this.twoDaySelected);
+    console.log(this.numberCalendar, "renderdaysInMonth");
     this.cleanPreviousSelection();
     this.daysInMonthRender();
     
   }
+
   @Prop() dateCalendar: CalendarEntry;
   @Prop() numberCalendar: 'main' | 'secondary' = null;
   @Prop() calendarActive: boolean = null;
@@ -61,9 +62,12 @@ export class CalendarSingle {
 
   @Prop({reflect: true, mutable: true}) cleanSelection: boolean = false;
   @Watch('cleanSelection')
-  cleanSelectionPropHandler(){
-    if (this.cleanSelection) {      
+  cleanSelectionPropHandler(newValue:boolean, oldValue:boolean){
+    if (this.cleanSelection && this.positionRange !== null &&this.positionRange.includes(PositionRange.empty)) {
+      console.log(this.numberCalendar, 'cleanSelectionPropHandler new', newValue);
+      //debugger;
       this.cleanPreviousSelection();
+      this.sendFromThisCalendar = null;
     }
   }
   private baseNameMonth: string = this.monthNames[this.setCalendar.month];
@@ -143,46 +147,50 @@ export class CalendarSingle {
     return false;
   }
 
-  cleanOneDaySelected(){
-    if (this.oneDaySelected !== null) {
-      this.oneDaySelected.classList.remove('selected');
-    }
-    if (this.twoDaySelected !== null) {
-      this.twoDaySelected.classList.remove('selected');
-    }
-  }
+  // cleanOneDaySelected(){
+  //   if (this.oneDaySelected !== null) {
+  //     this.oneDaySelected.classList.remove('selected');
+  //   }
+  //   if (this.twoDaySelected !== null) {
+  //     this.twoDaySelected.classList.remove('selected');
+  //   }
+  // }
 
   cleanPreviousSelection(){
     if(this.oneDaySelected !== null) {
-      this.cleanOneDaySelected();
-      this.oneDaySelected = null;
+      this.oneDaySelected.classList.remove('selected');
+      //this.cleanOneDaySelected();
+//      this.oneDaySelected = null;
     }
-    if (this.twoDaySelected !== null) {
-      this.twoDaySelected.classList.remove('selected');
-      this.twoDaySelected = null;      
-    }
+    // if (this.twoDaySelected !== null) {
+    //   this.twoDaySelected.classList.remove('selected');
+    //   this.twoDaySelected = null;      
+    // }
      
   }
 
   @Event({bubbles:true, composed: true}) dvnCalendarSingleDaySelected: EventEmitter<any>;
 
-  @Prop() positionRange: PositionRange | number = null;
+  @Prop() positionRange: PositionRange[] = null;
   @Watch('positionRange')
-  changePositionRange(newValue: PositionRange|number, oldValue:PositionRange|number){
-    if (this.cleanSelection) {
-      //console.log('CLEANSELECTION', this.numberCalendar, '>>>>>>>', this.cleanSelection)
+  changePositionRange(newValue: PositionRange, oldValue:PositionRange){
+    // console.log('changePositionRange en ', this.numberCalendar, '>>>>>>>', newValue)
+    // if (this.cleanSelection) {
+    //   this.cleanPreviousSelection();
+    // }
+    //debugger;
+    if (this.positionRange !== null && this.positionRange[0]=== PositionRange.empty) {
+      
       this.cleanPreviousSelection();
+      //console.log(this.numberCalendar, 'positionRange: renderdaysInMonth------>daysInMonthRender', this.positionRange);
+      // this.oneDaySelected = this.saveElementHTML;
+      // this.saveElementHTML = null;
     }
-    if (this.positionRange !== null) {
-      // console.log('positionRange: renderdaysInMonth------>daysInMonthRender', this.positionRange);
-      this.oneDaySelected = this.saveElementHTML;
-      this.saveElementHTML = null;
-    }
-    if(newValue !== oldValue && Number.isInteger(newValue)){
-      this.cleanPreviousSelection();
-    }
+    // if(newValue !== oldValue && Number.isInteger(newValue)){
+    // }
   }
 
+  @State() sendFromThisCalendar:CalendarEntry = null;
   sendDateSelected(day: number){
     const selectedDate: CalendarEntry = {
       day,
@@ -193,6 +201,7 @@ export class CalendarSingle {
       name: this.numberCalendar,
       date: selectedDate
     }
+    this.sendFromThisCalendar = selectedDate;
     this.dvnCalendarSingleDaySelected.emit(objEmit);
   }
 
@@ -204,36 +213,48 @@ export class CalendarSingle {
       this.oneDaySelected.classList.add('selected');
       this.sendDateSelected(day);
     } else if (isInsideLimit && this.typeSelection === 'range'){      
-      this.markSelection(event.target as HTMLElement)
       this.sendDateSelected(day);
     }
-    console.log(this.oneDaySelected, this.twoDaySelected);
   }
 
-  private saveElementHTML: HTMLElement = null;
-
-  markSelection(element: HTMLElement){
-    this.saveElementHTML = element;
-    if (this.oneDaySelected === null) {
-      this.oneDaySelected = element;
-      this.oneDaySelected.classList.add('selected');
-    } else if(this.twoDaySelected === null){
-      this.twoDaySelected = element;
-      this.twoDaySelected.classList.add('selected');
-    } else {
-      this.cleanOneDaySelected();
-      this.oneDaySelected = element;
-      this.oneDaySelected.classList.add('selected');
-    }
-  }
+  // markSelection(element: HTMLElement){
+  //   if (this.oneDaySelected === null) {
+  //     this.oneDaySelected = element;
+  //     this.oneDaySelected.classList.add('selected');
+  //   } else if(this.twoDaySelected === null){
+  //     this.twoDaySelected = element;
+  //     this.twoDaySelected.classList.add('selected');
+  //   } else {
+  //     this.cleanOneDaySelected();
+  //     this.oneDaySelected = element;
+  //     this.oneDaySelected.classList.add('selected');
+  //   }
+  // }
 
   daysInMonthRender(){
-    return this.daysInMonth.map( day =>{      
-
+    return this.daysInMonth.map( day =>{
       const classIsNow = this.dayCalendarIsNow(day) ? 'is-now' : '';
-      const classInRange = (true) ? 'in-range' : ''; 
-      const classSelected = day === this.positionRange ? 'selected' : '';
-      const combinedClass = [classIsNow, classInRange, classSelected].filter(Boolean).join(' ');
+      const classInRange = (true) ? 'in-range' : '';
+      let classSelected = ''; 
+      let classInsideTheRange = '';
+      if (this.typeSelection=== 'range' && Array.isArray(this.positionRange)) {
+        classSelected = this.positionRange.some( dayParam => dayParam === day) ? 'selected' : '';
+        if ( this.positionRange.includes(PositionRange.firstDay) ){
+          const limit = Number(this.positionRange[1]);
+          classInsideTheRange = day < limit ? 'inside-the-range' : '';
+        } else if ( this.positionRange.includes(PositionRange.lastDay )) {
+          const limit = Number(this.positionRange[0]);
+          classInsideTheRange = day > limit ? 'inside-the-range' : '';
+        } else if (this.positionRange.length === 2){
+          this.positionRange.sort( (a,b)=>  Number(a)-Number(b) )
+          const firstDayRange = Number(this.positionRange[0]);
+          const lastDayRange = Number(this.positionRange[1]);
+          classInsideTheRange = day > firstDayRange 
+            && day < lastDayRange 
+            ? 'inside-the-range' : '';
+        }
+      }
+      const combinedClass = [classIsNow, classInRange, classSelected, classInsideTheRange].filter(Boolean).join(' ');
 
       if (day === 0) {
         return <li class='disabled'>{ day }</li>

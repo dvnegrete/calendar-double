@@ -84,6 +84,12 @@ li.selected:nth-child(7n + 7){
   width: 21px;
 }
 
+.days-in-month .inside-the-range {
+  background-color: #def6ff;
+  border-radius: 0px;
+  color: #0075c0;
+}
+
 li.is-now:nth-child(7n + 1),
 li.is-now:nth-child(7n + 7){
   border-radius: 25px;

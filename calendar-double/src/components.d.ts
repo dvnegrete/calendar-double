@@ -18,7 +18,7 @@ export namespace Components {
         "cleanSelection": boolean;
         "dateCalendar": CalendarEntry;
         "numberCalendar": 'main' | 'secondary';
-        "positionRange": PositionRange | number;
+        "positionRange": PositionRange[];
         "setCalendar": CalendarEntry;
         "typeSelection": 'oneDay' | 'range';
     }
@@ -146,7 +146,7 @@ declare namespace LocalJSX {
         "dateCalendar"?: CalendarEntry;
         "numberCalendar"?: 'main' | 'secondary';
         "onDvnCalendarSingleDaySelected"?: (event: CalendarSingleCustomEvent<any>) => void;
-        "positionRange"?: PositionRange | number;
+        "positionRange"?: PositionRange[];
         "setCalendar"?: CalendarEntry;
         "typeSelection"?: 'oneDay' | 'range';
     }
