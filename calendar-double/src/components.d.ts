@@ -11,16 +11,15 @@ export { CalendarEntry } from "./utils/interfaces/calendarEntry";
 export { PositionRange } from "./utils/enum/positionRange";
 export namespace Components {
     interface CalendarDouble {
-        "typeSelection": 'oneDay' | 'range';
+        "typeSelection": 'oneDay' | 'range' | 'period';
     }
     interface CalendarSingle {
         "calendarActive": boolean;
-        "cleanSelection": boolean;
         "dateCalendar": CalendarEntry;
         "numberCalendar": 'main' | 'secondary';
         "positionRange": PositionRange[];
         "setCalendar": CalendarEntry;
-        "typeSelection": 'oneDay' | 'range';
+        "typeSelection": 'oneDay' | 'range' | 'period';
     }
     interface DoubleCalendarContainer {
     }
@@ -138,17 +137,16 @@ declare namespace LocalJSX {
         "onDvnApplicationDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
         "onDvnEndDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
         "onDvnStartDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
-        "typeSelection"?: 'oneDay' | 'range';
+        "typeSelection"?: 'oneDay' | 'range' | 'period';
     }
     interface CalendarSingle {
         "calendarActive"?: boolean;
-        "cleanSelection"?: boolean;
         "dateCalendar"?: CalendarEntry;
         "numberCalendar"?: 'main' | 'secondary';
         "onDvnCalendarSingleDaySelected"?: (event: CalendarSingleCustomEvent<any>) => void;
         "positionRange"?: PositionRange[];
         "setCalendar"?: CalendarEntry;
-        "typeSelection"?: 'oneDay' | 'range';
+        "typeSelection"?: 'oneDay' | 'range' | 'period';
     }
     interface DoubleCalendarContainer {
     }

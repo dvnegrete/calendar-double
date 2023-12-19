@@ -4,6 +4,7 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 4px 0;
+  height: 21px;
 }
 
 .button-next {
@@ -22,4 +23,11 @@ header {
 
 .inactive {
   color: var(--inactive-color, rgb(179,179,179));
+}
+
+.hidden  {
+  width: 15px;
+}
+.hidden  img{
+  display: none;
 }

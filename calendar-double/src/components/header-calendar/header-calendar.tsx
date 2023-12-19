@@ -18,16 +18,25 @@ export class HeaderCalendar {
     return (
       <header>
         {this.twoArrow || this.position === 'left' ? 
-        <button class='button-next' onClick={ ()=> this.previousMonthCalendar.emit() }>
-          <img src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/left-chevron.svg" alt="atras" />
-        </button>
+        <div 
+          class={this.nameInactive ? 'button-next hidden': 'button-next'} 
+          onClick={ ()=> this.previousMonthCalendar.emit() }>
+            <img 
+              src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/left-chevron.svg" 
+              alt="atras"
+            />
+        </div>
         : <div class='empty'></div>
         }
         <span class={ this.nameInactive ? 'inactive' : '' }>{ this.nameMonth } { this.year }</span> 
         { this.twoArrow || this.position === 'right' ? 
-          <button class='button-next' onClick={ ()=> this.nextMonthCalendar.emit() }>
-            <img src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg" alt="siguiente" />
-          </button>
+          <div 
+            class={this.nameInactive ? 'button-next hidden': 'button-next'} 
+            onClick={ ()=> this.nextMonthCalendar.emit() }>
+              <img 
+              src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg" 
+              alt="siguiente" />
+          </div>
         : <div class='empty'></div>
         }
       </header>

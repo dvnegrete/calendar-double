@@ -29,7 +29,7 @@
   grid-template-columns: repeat(7, 1fr);
   padding: 0;
   margin: 0;
-  /* color: rgb(179, 179, 179); */
+  color: rgb(179, 179, 179);
   background-color: transparent;
   /* width: 155px; */
 }

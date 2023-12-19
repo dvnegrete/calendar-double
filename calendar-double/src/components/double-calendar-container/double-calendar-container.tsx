@@ -8,10 +8,10 @@ import { Component, Host, Listen, State, h } from '@stencil/core';
 export class DoubleCalendarContainer {
   @State() countDaysSelected = 0;
   @State() showCalendarDouble = true;
-  @State() typeSelection: 'oneDay' | 'range' = 'range';
+  @State() typeSelection: 'oneDay' | 'range' | 'period' = 'oneDay';
   @Listen('dvnApplicationDate')
   applicationDate(event: CustomEvent){
-    console.log(event.detail);
+    //console.log(event.detail);
     
   }
 
@@ -22,7 +22,7 @@ export class DoubleCalendarContainer {
     this.typeSelection = 'range';
   }
   handlerForPeriod(){
-    this.typeSelection = 'range'
+    this.typeSelection = 'period';
   }
 
   continue(){}
@@ -42,6 +42,7 @@ export class DoubleCalendarContainer {
                 name='typeSelection'
                 id='forDay'
                 onInput={ ()=> this.handlerForDay()}
+                defaultChecked
               />
               Por día
             </label>
