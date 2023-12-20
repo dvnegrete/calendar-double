@@ -1,6 +1,7 @@
 import { Component, Event, EventEmitter, Prop, State, Watch, h } from '@stencil/core';
 import { CalendarEntry } from '../../utils/interfaces/calendarEntry';
 import { PositionRange } from '../../utils/enum/positionRange';
+import { CONSTANTS } from '../shared/constants';
 
 @Component({
   tag: 'calendar-single',
@@ -11,64 +12,42 @@ import { PositionRange } from '../../utils/enum/positionRange';
   shadow: true,
 })
 export class CalendarSingle {
-  private daynames = [
-    'Dom',
-    'Lun',
-    'Mar',
-    'Mie',
-    'Jue',
-    'Vie',
-    'Sab',
-  ];
-  private monthNames = [
-    'Enero',
-    'Febrero',
-    'Marzo',
-    'Abril',
-    'Mayo',
-    'Junio',
-    'Julio',
-    'Agosto',
-    'Septiembre',
-    'Octubre',
-    'Noviembre',
-    'Diciembre'
-  ];
-  private year: string;
-
+  private dayNames = CONSTANTS['es-MX'].daynames;
+  private monthNames = CONSTANTS['es-MX'].monthNames;
+  private totalDaysInTheMonth: number = null;  
+  private year: string;  
+  @Prop({ reflect: true, mutable: true }) setCalendar: CalendarEntry = {month:11, year:2023, day:19};
+  private baseNameMonth: string = this.monthNames[this.setCalendar.month];
+  @Prop() dateCalendar: CalendarEntry;
+  @Prop() numberCalendar: 'main' | 'secondary' = null;
+  @Prop() positionRange: PositionRange[] = null; 
   @Prop() typeSelection: 'oneDay' | 'range' | 'period' = 'oneDay';
   @Watch('typeSelection')
   handlerTypeSelection(newType:string, oldType:string){
     if (newType !== oldType) {
       this.daysInMonthRender();
     }
-
-  }
-  @State() daysInMonth: number[];
-  // renderdaysInMonth(){
-  //   this.daysInMonthRender();
     
-  // }
+  }
   
-  @Prop() dateCalendar: CalendarEntry;
-  @Prop() numberCalendar: 'main' | 'secondary' = null;
-  @Prop() calendarActive: boolean = null;
-  @Watch('daysInMonth')
+  @State() valueCalendar: CalendarEntry;
+  @State() daysInMonth: number[];
+  @State() sendFromThisCalendar:CalendarEntry = null;
+  
+  @Prop() calendarActive: boolean = null;  
   @Watch('calendarActive')
   handlerWatchProp(){
     this.daysInMonthRender();
   }
-
-  @State() valueCalendar: CalendarEntry;
-  @Prop({ reflect: true, mutable: true }) setCalendar: CalendarEntry = {month:1, year:2020, day:1};
+  
+  @Event({bubbles:true, composed: true}) dvnCalendarSingleDaySelected: EventEmitter<any>;
+  
   @Watch('setCalendar')
   setCalendarChange(newValue: CalendarEntry, oldValue: CalendarEntry){
     if (newValue !== oldValue) {
       this.daysInMonth = this.writeMonth();
     }
   }
-  private totalDaysInTheMonth: number = null;
-  private baseNameMonth: string = this.monthNames[this.setCalendar.month];
   private startDay(date: CalendarEntry){
     const start = new Date(date.year, date.month, date.day);
     return start.getDay();
@@ -84,6 +63,7 @@ export class CalendarSingle {
     month === 9 ||
     month === 11 )
   }
+
   private monthOfThirtyDays(month: number) {
     return (
       month === 3 ||
@@ -108,7 +88,6 @@ export class CalendarSingle {
       return this.isLeap(date.year) ? 29 : 28;
     }
   }
-
 
   private writeMonth ():number[] {
     let content = [];
@@ -139,21 +118,15 @@ export class CalendarSingle {
     return this.setCalendar.month === monthNow && day === dayNow;
   }
 
-  verifyLimit(day:number){
+  private verifyLimit(day:number){
     //Desarrollar logica para limite deseado
-    if (this.calendarActive || this.typeSelection === 'period') {
+    if (this.calendarActive || this.typeSelection === 'period' && Array.isArray(this.positionRange)) {
       return true;
     }
     return false;
   }
 
-  @Event({bubbles:true, composed: true}) dvnCalendarSingleDaySelected: EventEmitter<any>;
-
-  @Prop() positionRange: PositionRange[] = null;
- 
-  @State() sendFromThisCalendar:CalendarEntry = null;
-
-  daySelectedHandler(day:number){
+  private daySelectedHandler(day:number){
     const isInsideLimit = this.verifyLimit(day);
     if (isInsideLimit ) {
       const selectedDate: CalendarEntry = {
@@ -170,7 +143,7 @@ export class CalendarSingle {
     }
   }
 
-  markTheWholeMonth(day: number){
+  private markTheWholeMonth(day: number){
     if (day === 1 || day === this.totalDaysInTheMonth) {
       return 'selected';
     } else {
@@ -178,7 +151,7 @@ export class CalendarSingle {
     }
   }
 
-  nameClassToElement(day: number){
+  private nameClassToElement(day: number){
     const classInRange = this.verifyLimit(day) ? 'in-range' : '';
     let classSelected = ''; 
     let classInsideTheRange = '';
@@ -199,7 +172,7 @@ export class CalendarSingle {
       }
     } else if (this.typeSelection === 'oneDay' && Array.isArray(this.positionRange)) {
       classSelected = this.positionRange.some( dayParam => dayParam === day) ? 'selected' : '';
-    } else if (this.typeSelection === 'period') {
+    } else if (this.typeSelection === 'period' && Array.isArray(this.positionRange) && this.positionRange.includes(PositionRange.all)) {
       classAllMonth = this.markTheWholeMonth(day);
     }
     const classIsNow = this.dayCalendarIsNow(day) ? 'is-now' : '';
@@ -207,7 +180,7 @@ export class CalendarSingle {
     return combinedClass;
   }
 
-  daysInMonthRender(){
+  private daysInMonthRender(){
     return this.daysInMonth.map( day =>{
       const combinedClass = this.nameClassToElement(day);
       if (day === 0) {
@@ -232,7 +205,7 @@ export class CalendarSingle {
           ></header-calendar>
 
           <div class='day-names'>
-            { this.daynames.map( dayname => {
+            { this.dayNames.map( dayname => {
               return (<span>{dayname}</span>)
             }) }
           </div>
@@ -240,7 +213,6 @@ export class CalendarSingle {
             <ol class='days-in-month'>
               { this.daysInMonthRender() }
             </ol>
-
         </div>
       </div>
     );

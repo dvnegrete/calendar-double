@@ -11,6 +11,7 @@ export { CalendarEntry } from "./utils/interfaces/calendarEntry";
 export { PositionRange } from "./utils/enum/positionRange";
 export namespace Components {
     interface CalendarDouble {
+        "mainDateReceived": Date;
         "typeSelection": 'oneDay' | 'range' | 'period';
     }
     interface CalendarSingle {
@@ -59,9 +60,9 @@ export interface HeaderCalendarCustomEvent<T> extends CustomEvent<T> {
 }
 declare global {
     interface HTMLCalendarDoubleElementEventMap {
-        "dvnApplicationDate": CalendarEntry;
-        "dvnStartDate": CalendarEntry;
-        "dvnEndDate": CalendarEntry;
+        "dvnCalendarDoubleSetDate": CalendarEntry;
+        "dc-applicationDate": CalendarEntry;
+        "dc-rangeDate": CalendarEntry[];
     }
     interface HTMLCalendarDoubleElement extends Components.CalendarDouble, HTMLStencilElement {
         addEventListener<K extends keyof HTMLCalendarDoubleElementEventMap>(type: K, listener: (this: HTMLCalendarDoubleElement, ev: CalendarDoubleCustomEvent<HTMLCalendarDoubleElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -134,9 +135,10 @@ declare global {
 }
 declare namespace LocalJSX {
     interface CalendarDouble {
-        "onDvnApplicationDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
-        "onDvnEndDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
-        "onDvnStartDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
+        "mainDateReceived"?: Date;
+        "onDc-applicationDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
+        "onDc-rangeDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry[]>) => void;
+        "onDvnCalendarDoubleSetDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
         "typeSelection"?: 'oneDay' | 'range' | 'period';
     }
     interface CalendarSingle {

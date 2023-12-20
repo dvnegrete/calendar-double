@@ -1,5 +1,6 @@
 :host {
   display: block;
+  font-size: 62.5%;
 }
 
 .container {
@@ -11,12 +12,12 @@
   height: 310px;
   padding: 20px;
   display: grid;
-  grid-template-columns: 380px 148px;
+  grid-template-columns: 190px 190px 120px;
   grid-template-rows: 45px 210px 55px;
   grid-template-areas: 
-  'header header'
-  'calendar period'
-  'days button';
+  'header header header'
+  'calendar calendar period'
+  'days now button';
 }
 
 .hidden {
@@ -63,4 +64,74 @@
 .completed {
   cursor: pointer;
   color: var(--secondary-color, #fff);
+}
+
+.period-list {
+  grid-area: period;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 10px;
+  padding: 15px 2px;  
+  height: 160px;
+  width: 125px;
+}
+
+.period-list img {
+  rotate: 270deg;
+  height: 17px;
+  width: max-content;
+  padding: 5px 0;
+  cursor: pointer;
+}
+
+.period-list img:last-child {
+  rotate: 90deg;  
+}
+
+.period-list label {
+  padding: 7px 5px;
+  width: 100px;
+  cursor: pointer;
+  transition: margin 0.5s ease-in-out;
+  display: flex;
+  justify-content: center;
+}
+
+.disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.period-list input {
+  margin: 0;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+
+.period-list .selected-period {
+  border: solid 1.5px var(--primary-color, #0075c0);
+  border-radius: 50%;  
+}
+
+.counter-days {
+  grid-area: days;
+  font-size: 12px;
+  align-items: center;
+}
+
+.go-today {
+  grid-area: now;
+  height: 25px;
+  width: 55px;
+  color: var(--primary-color, #0075c0);
+  background: none;
+  font-size: 10px;
+  padding: 5px;
+  font-weight: 600;
+  border: solid 1px;
+  border-radius: 3em;
+  justify-self: flex-start;
+  align-self: center;
+  cursor: pointer;
 }
