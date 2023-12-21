@@ -39,7 +39,7 @@ export class CalendarSingle {
     this.daysInMonthRender();
   }
   
-  @Event({bubbles:true, composed: true}) dvnCalendarSingleDaySelected: EventEmitter<any>;
+  @Event({eventName: 'dvn-valueCalendarSelected', bubbles:true, composed: true}) valueCalendarSelected: EventEmitter<any>;
   
   @Watch('setCalendar')
   setCalendarChange(newValue: CalendarEntry, oldValue: CalendarEntry){
@@ -48,12 +48,12 @@ export class CalendarSingle {
     }
   }
 
-  @Listen('dc-changeCleanPeriod', { target: 'window' })
+  @Listen('dvn-changeCleanPeriod', { target: 'window' })
   handlerChangeCleanPeriod(){
     this.positionRange = null;
   }
   
-  @Listen('dc-cleanCalendarSelection', { target: 'window' })
+  @Listen('dvn-cleanCalendarSelection', { target: 'window' })
   handlerCleanCalendarSelection(){
     this.positionRange = null;
   }
@@ -149,7 +149,7 @@ export class CalendarSingle {
         date: selectedDate
       }
       this.sendFromThisCalendar = selectedDate;
-      this.dvnCalendarSingleDaySelected.emit(objEmit);
+      this.valueCalendarSelected.emit(objEmit);
     }
   }
 

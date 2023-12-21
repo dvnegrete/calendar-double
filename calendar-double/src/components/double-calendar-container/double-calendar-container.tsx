@@ -8,10 +8,10 @@ import { CONSTANTS } from '../shared/constants';
   shadow: true,
 })
 export class DoubleCalendarContainer {
-  @Event({eventName:'dc-arrayDatesSelected', bubbles:true, composed: true}) showDate: EventEmitter<Array<Date | string>>;
-  @Event({eventName:'dc-closeDoubleCalendar', bubbles:true, composed: true }) closeDoubleCalendar: EventEmitter<boolean>;
-  @Event({eventName:'dc-changeCleanPeriod', bubbles:true, composed: true }) changeCleanPeriod: EventEmitter<any>;
-  @Event({eventName:'dc-cleanCalendarSelection', bubbles:true, composed: true }) cleanCalendarSelection: EventEmitter<any>;
+  @Event({eventName:'dvn-arrayDatesSelected', bubbles:true, composed: true}) showDate: EventEmitter<Array<Date | string>>;
+  @Event({eventName:'dvn-closeDoubleCalendar', bubbles:true, composed: true }) closeDoubleCalendar: EventEmitter<boolean>;
+  @Event({eventName:'dvn-changeCleanPeriod', bubbles:true, composed: true }) changeCleanPeriod: EventEmitter<any>;
+  @Event({eventName:'dvn-cleanCalendarSelection', bubbles:true, composed: true }) cleanCalendarSelection: EventEmitter<any>;
 
   @Element() el: HTMLElement;
 
@@ -24,7 +24,7 @@ export class DoubleCalendarContainer {
   @State() buttonContinue = false;
   @State() typeSelection: 'oneDay' | 'range' | 'period' = 'oneDay';
 
-  @Listen('dc-applicationDate')
+  @Listen('dvn-applicationDate')
   applicationDate(event: CustomEvent){
     this.countDaysSelected = 1;
     const date = this.convertCalendarEntryOnDate(event.detail);
@@ -32,7 +32,7 @@ export class DoubleCalendarContainer {
     this.buttonContinue = true;
   }
   
-  @Listen('dc-rangeDate')
+  @Listen('dvn-rangeDate')
   handlerRangeDate(event:CustomEvent){
     const firstSelection = this.convertCalendarEntryOnDate(event.detail[0]);
     const lastSelection = this.convertCalendarEntryOnDate(event.detail[1]);
@@ -41,14 +41,14 @@ export class DoubleCalendarContainer {
     this.buttonContinue = true;
   }
 
-  @Listen('dvnCalendarDoubleSetDate')
+  @Listen('dvn-calendarDoubleSetDate')
   handlerCalendarDobleSetDate(event: CustomEvent){
     const setNewDate:CalendarEntry = event.detail;
     this.assignDate = new Date(setNewDate.year, setNewDate.month, setNewDate.day);
   }
 
-  @Listen('dvnPreviousMonthCalendar')
-  @Listen('dvnNextMonthCalendar')
+  @Listen('dvn-previousMonthCalendar')
+  @Listen('dvn-nextMonthCalendar')
   handlerChangeMonthCalendar(){
     this.countDaysSelected = 0;
     this.buttonContinue = false;

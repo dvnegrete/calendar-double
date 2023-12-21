@@ -10,7 +10,7 @@ export class CalendarInputSelection {
   @State() placeholder = 'Selecciona una fecha';
   @State() showCalendarDouble = false;
 
-  @Listen('dc-arrayDatesSelected')
+  @Listen('dvn-arrayDatesSelected')
   handlerDatesSelected(event: CustomEvent){
     if (Array.isArray(event.detail)) {
       this.legendPlaceHolder(event.detail);
@@ -19,13 +19,13 @@ export class CalendarInputSelection {
     }
   }
 
-  @Listen('dc-closeDoubleCalendar')
+  @Listen('dvn-closeDoubleCalendar')
   handlerCloseDoubleCalendar(event: CustomEvent){
     this.showCalendarDouble = !event.detail;
   }
   
-  @Listen('dvnPreviousMonthCalendar')
-  @Listen('dvnNextMonthCalendar')
+  @Listen('dvn-previousMonthCalendar')
+  @Listen('dvn-nextMonthCalendar')
   handlerChangeMonthCalendar(){
     this.placeholder = this.defaultPlaceholder;
   }  

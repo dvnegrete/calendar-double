@@ -1,3 +1,9 @@
+:host{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 .select-date {
   cursor: pointer;
   border-radius: 3px;

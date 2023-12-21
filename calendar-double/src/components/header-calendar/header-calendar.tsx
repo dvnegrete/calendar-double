@@ -11,8 +11,8 @@ export class HeaderCalendar {
   @Prop() nameInactive = false;
   @Prop() position: 'left' | 'right' = null;
   @Prop() twoArrow = false;
-  @Event({ eventName:'dvnNextMonthCalendar', composed:true, cancelable: true, bubbles: true }) nextMonthCalendar: EventEmitter;
-  @Event({ eventName:'dvnPreviousMonthCalendar', composed:true, cancelable: true, bubbles: true }) previousMonthCalendar: EventEmitter;
+  @Event({ eventName:'dvn-nextMonthCalendar', composed:true, cancelable: true, bubbles: true }) nextMonthCalendar: EventEmitter;
+  @Event({ eventName:'dvn-previousMonthCalendar', composed:true, cancelable: true, bubbles: true }) previousMonthCalendar: EventEmitter;
 
   render() {
     return (

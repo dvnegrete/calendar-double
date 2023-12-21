@@ -66,9 +66,9 @@ export interface HeaderCalendarCustomEvent<T> extends CustomEvent<T> {
 }
 declare global {
     interface HTMLCalendarDoubleElementEventMap {
-        "dvnCalendarDoubleSetDate": CalendarEntry;
-        "dc-applicationDate": CalendarEntry;
-        "dc-rangeDate": CalendarEntry[];
+        "dvn-calendarDoubleSetDate": CalendarEntry;
+        "dvn-applicationDate": CalendarEntry;
+        "dvn-rangeDate": CalendarEntry[];
     }
     interface HTMLCalendarDoubleElement extends Components.CalendarDouble, HTMLStencilElement {
         addEventListener<K extends keyof HTMLCalendarDoubleElementEventMap>(type: K, listener: (this: HTMLCalendarDoubleElement, ev: CalendarDoubleCustomEvent<HTMLCalendarDoubleElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -91,7 +91,7 @@ declare global {
         new (): HTMLCalendarInputSelectionElement;
     };
     interface HTMLCalendarSingleElementEventMap {
-        "dvnCalendarSingleDaySelected": any;
+        "dvn-valueCalendarSelected": any;
     }
     interface HTMLCalendarSingleElement extends Components.CalendarSingle, HTMLStencilElement {
         addEventListener<K extends keyof HTMLCalendarSingleElementEventMap>(type: K, listener: (this: HTMLCalendarSingleElement, ev: CalendarSingleCustomEvent<HTMLCalendarSingleElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -108,10 +108,10 @@ declare global {
         new (): HTMLCalendarSingleElement;
     };
     interface HTMLDoubleCalendarContainerElementEventMap {
-        "dc-arrayDatesSelected": Array<Date | string>;
-        "dc-closeDoubleCalendar": boolean;
-        "dc-changeCleanPeriod": any;
-        "dc-cleanCalendarSelection": any;
+        "dvn-arrayDatesSelected": Array<Date | string>;
+        "dvn-closeDoubleCalendar": boolean;
+        "dvn-changeCleanPeriod": any;
+        "dvn-cleanCalendarSelection": any;
     }
     interface HTMLDoubleCalendarContainerElement extends Components.DoubleCalendarContainer, HTMLStencilElement {
         addEventListener<K extends keyof HTMLDoubleCalendarContainerElementEventMap>(type: K, listener: (this: HTMLDoubleCalendarContainerElement, ev: DoubleCalendarContainerCustomEvent<HTMLDoubleCalendarContainerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -128,8 +128,8 @@ declare global {
         new (): HTMLDoubleCalendarContainerElement;
     };
     interface HTMLHeaderCalendarElementEventMap {
-        "dvnNextMonthCalendar": any;
-        "dvnPreviousMonthCalendar": any;
+        "dvn-nextMonthCalendar": any;
+        "dvn-previousMonthCalendar": any;
     }
     interface HTMLHeaderCalendarElement extends Components.HeaderCalendar, HTMLStencilElement {
         addEventListener<K extends keyof HTMLHeaderCalendarElementEventMap>(type: K, listener: (this: HTMLHeaderCalendarElement, ev: HeaderCalendarCustomEvent<HTMLHeaderCalendarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -163,9 +163,9 @@ declare global {
 declare namespace LocalJSX {
     interface CalendarDouble {
         "mainDateReceived"?: Date;
-        "onDc-applicationDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
-        "onDc-rangeDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry[]>) => void;
-        "onDvnCalendarDoubleSetDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
+        "onDvn-applicationDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
+        "onDvn-calendarDoubleSetDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
+        "onDvn-rangeDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry[]>) => void;
         "typeSelection"?: 'oneDay' | 'range' | 'period';
     }
     interface CalendarInputSelection {
@@ -174,22 +174,22 @@ declare namespace LocalJSX {
         "calendarActive"?: boolean;
         "dateCalendar"?: CalendarEntry;
         "numberCalendar"?: 'main' | 'secondary';
-        "onDvnCalendarSingleDaySelected"?: (event: CalendarSingleCustomEvent<any>) => void;
+        "onDvn-valueCalendarSelected"?: (event: CalendarSingleCustomEvent<any>) => void;
         "positionRange"?: PositionRange[];
         "setCalendar"?: CalendarEntry;
         "typeSelection"?: 'oneDay' | 'range' | 'period';
     }
     interface DoubleCalendarContainer {
-        "onDc-arrayDatesSelected"?: (event: DoubleCalendarContainerCustomEvent<Array<Date | string>>) => void;
-        "onDc-changeCleanPeriod"?: (event: DoubleCalendarContainerCustomEvent<any>) => void;
-        "onDc-cleanCalendarSelection"?: (event: DoubleCalendarContainerCustomEvent<any>) => void;
-        "onDc-closeDoubleCalendar"?: (event: DoubleCalendarContainerCustomEvent<boolean>) => void;
+        "onDvn-arrayDatesSelected"?: (event: DoubleCalendarContainerCustomEvent<Array<Date | string>>) => void;
+        "onDvn-changeCleanPeriod"?: (event: DoubleCalendarContainerCustomEvent<any>) => void;
+        "onDvn-cleanCalendarSelection"?: (event: DoubleCalendarContainerCustomEvent<any>) => void;
+        "onDvn-closeDoubleCalendar"?: (event: DoubleCalendarContainerCustomEvent<boolean>) => void;
     }
     interface HeaderCalendar {
         "nameInactive"?: boolean;
         "nameMonth"?: string;
-        "onDvnNextMonthCalendar"?: (event: HeaderCalendarCustomEvent<any>) => void;
-        "onDvnPreviousMonthCalendar"?: (event: HeaderCalendarCustomEvent<any>) => void;
+        "onDvn-nextMonthCalendar"?: (event: HeaderCalendarCustomEvent<any>) => void;
+        "onDvn-previousMonthCalendar"?: (event: HeaderCalendarCustomEvent<any>) => void;
         "position"?: 'left' | 'right';
         "twoArrow"?: boolean;
         "year"?: string;

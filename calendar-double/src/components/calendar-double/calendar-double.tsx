@@ -43,7 +43,7 @@ export class CalendarDouble {
     }
   }
 
-  @Listen('dvnPreviousMonthCalendar')
+  @Listen('dvn-previousMonthCalendar')
   previousMonthCalendarEvent(){
     this.cleanPreviousSelection();
     this.setCalendarMain = {
@@ -54,7 +54,7 @@ export class CalendarDouble {
     this.setDate();
   }
 
-  @Listen('dvnNextMonthCalendar')
+  @Listen('dvn-nextMonthCalendar')
   nextMonthCalendarEvent(){
     this.cleanPreviousSelection();
     this.setCalendarMain = {
@@ -69,7 +69,7 @@ export class CalendarDouble {
     this.setDate();
   }
 
-  @Listen('dvnCalendarSingleDaySelected')
+  @Listen('dvn-valueCalendarSelected')
   calendarSingleDaySelected(event: CustomEvent) {
     this.assignValuePositionOneDay(event);
     if (this.typeSelection === 'oneDay') {
@@ -92,9 +92,9 @@ export class CalendarDouble {
     }
   }
 
-  @Event({bubbles:true, composed: true}) dvnCalendarDoubleSetDate: EventEmitter<CalendarEntry>;
-  @Event({eventName:'dc-applicationDate', bubbles:true, composed: true}) applicationDate: EventEmitter<CalendarEntry>;
-  @Event({eventName:'dc-rangeDate', bubbles:true, composed: true}) rangeDate: EventEmitter<CalendarEntry[]>;
+  @Event({eventName:'dvn-calendarDoubleSetDate', bubbles:true, composed: true}) calendarDoubleSetDate: EventEmitter<CalendarEntry>;
+  @Event({eventName:'dvn-applicationDate', bubbles:true, composed: true}) applicationDate: EventEmitter<CalendarEntry>;
+  @Event({eventName:'dvn-rangeDate', bubbles:true, composed: true}) rangeDate: EventEmitter<CalendarEntry[]>;
 
   private assignValuePositionOneDay(event: CustomEvent){
     if (event.detail.name === 'main') {
@@ -214,7 +214,7 @@ export class CalendarDouble {
   
   private setDate(){
     this.setDateCalendarSecond();
-    this.dvnCalendarDoubleSetDate.emit(this.setCalendarMain);
+    this.calendarDoubleSetDate.emit(this.setCalendarMain);
   }
 
   componentWillLoad(){
