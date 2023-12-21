@@ -14,6 +14,8 @@ export namespace Components {
         "mainDateReceived": Date;
         "typeSelection": 'oneDay' | 'range' | 'period';
     }
+    interface CalendarInputSelection {
+    }
     interface CalendarSingle {
         "calendarActive": boolean;
         "dateCalendar": CalendarEntry;
@@ -54,6 +56,10 @@ export interface CalendarSingleCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLCalendarSingleElement;
 }
+export interface DoubleCalendarContainerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLDoubleCalendarContainerElement;
+}
 export interface HeaderCalendarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLHeaderCalendarElement;
@@ -78,6 +84,12 @@ declare global {
         prototype: HTMLCalendarDoubleElement;
         new (): HTMLCalendarDoubleElement;
     };
+    interface HTMLCalendarInputSelectionElement extends Components.CalendarInputSelection, HTMLStencilElement {
+    }
+    var HTMLCalendarInputSelectionElement: {
+        prototype: HTMLCalendarInputSelectionElement;
+        new (): HTMLCalendarInputSelectionElement;
+    };
     interface HTMLCalendarSingleElementEventMap {
         "dvnCalendarSingleDaySelected": any;
     }
@@ -95,7 +107,21 @@ declare global {
         prototype: HTMLCalendarSingleElement;
         new (): HTMLCalendarSingleElement;
     };
+    interface HTMLDoubleCalendarContainerElementEventMap {
+        "dc-arrayDatesSelected": Array<Date | string>;
+        "dc-closeDoubleCalendar": boolean;
+        "dc-changeCleanPeriod": any;
+        "dc-cleanCalendarSelection": any;
+    }
     interface HTMLDoubleCalendarContainerElement extends Components.DoubleCalendarContainer, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLDoubleCalendarContainerElementEventMap>(type: K, listener: (this: HTMLDoubleCalendarContainerElement, ev: DoubleCalendarContainerCustomEvent<HTMLDoubleCalendarContainerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLDoubleCalendarContainerElementEventMap>(type: K, listener: (this: HTMLDoubleCalendarContainerElement, ev: DoubleCalendarContainerCustomEvent<HTMLDoubleCalendarContainerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLDoubleCalendarContainerElement: {
         prototype: HTMLDoubleCalendarContainerElement;
@@ -127,6 +153,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "calendar-double": HTMLCalendarDoubleElement;
+        "calendar-input-selection": HTMLCalendarInputSelectionElement;
         "calendar-single": HTMLCalendarSingleElement;
         "double-calendar-container": HTMLDoubleCalendarContainerElement;
         "header-calendar": HTMLHeaderCalendarElement;
@@ -141,6 +168,8 @@ declare namespace LocalJSX {
         "onDvnCalendarDoubleSetDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
         "typeSelection"?: 'oneDay' | 'range' | 'period';
     }
+    interface CalendarInputSelection {
+    }
     interface CalendarSingle {
         "calendarActive"?: boolean;
         "dateCalendar"?: CalendarEntry;
@@ -151,6 +180,10 @@ declare namespace LocalJSX {
         "typeSelection"?: 'oneDay' | 'range' | 'period';
     }
     interface DoubleCalendarContainer {
+        "onDc-arrayDatesSelected"?: (event: DoubleCalendarContainerCustomEvent<Array<Date | string>>) => void;
+        "onDc-changeCleanPeriod"?: (event: DoubleCalendarContainerCustomEvent<any>) => void;
+        "onDc-cleanCalendarSelection"?: (event: DoubleCalendarContainerCustomEvent<any>) => void;
+        "onDc-closeDoubleCalendar"?: (event: DoubleCalendarContainerCustomEvent<boolean>) => void;
     }
     interface HeaderCalendar {
         "nameInactive"?: boolean;
@@ -177,6 +210,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "calendar-double": CalendarDouble;
+        "calendar-input-selection": CalendarInputSelection;
         "calendar-single": CalendarSingle;
         "double-calendar-container": DoubleCalendarContainer;
         "header-calendar": HeaderCalendar;
@@ -188,6 +222,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "calendar-double": LocalJSX.CalendarDouble & JSXBase.HTMLAttributes<HTMLCalendarDoubleElement>;
+            "calendar-input-selection": LocalJSX.CalendarInputSelection & JSXBase.HTMLAttributes<HTMLCalendarInputSelectionElement>;
             "calendar-single": LocalJSX.CalendarSingle & JSXBase.HTMLAttributes<HTMLCalendarSingleElement>;
             "double-calendar-container": LocalJSX.DoubleCalendarContainer & JSXBase.HTMLAttributes<HTMLDoubleCalendarContainerElement>;
             "header-calendar": LocalJSX.HeaderCalendar & JSXBase.HTMLAttributes<HTMLHeaderCalendarElement>;

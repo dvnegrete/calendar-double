@@ -20,6 +20,10 @@
   margin-bottom: 5px;
 }
 
+.inactive {
+  opacity: 0.5;
+}
+
 .days-in-month {
   list-style: none;
   display: grid;
@@ -67,7 +71,7 @@ li.selected:nth-child(7n + 7){
   border-radius: 50%;
 }
 
-.days-in-month .in-range {
+.in-range {
   color: black;
   cursor: pointer;
   border-radius: 50%;

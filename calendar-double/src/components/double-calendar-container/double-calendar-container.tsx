@@ -1,4 +1,4 @@
-import { Component, Element, Host, Listen, State, h } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Host, Listen, State, h } from '@stencil/core';
 import { CalendarEntry } from '../../utils/interfaces/calendarEntry';
 import { CONSTANTS } from '../shared/constants';
 
@@ -8,25 +8,37 @@ import { CONSTANTS } from '../shared/constants';
   shadow: true,
 })
 export class DoubleCalendarContainer {
-  private monthNames = CONSTANTS['es-MX'].monthNames;
+  @Event({eventName:'dc-arrayDatesSelected', bubbles:true, composed: true}) showDate: EventEmitter<Array<Date | string>>;
+  @Event({eventName:'dc-closeDoubleCalendar', bubbles:true, composed: true }) closeDoubleCalendar: EventEmitter<boolean>;
+  @Event({eventName:'dc-changeCleanPeriod', bubbles:true, composed: true }) changeCleanPeriod: EventEmitter<any>;
+  @Event({eventName:'dc-cleanCalendarSelection', bubbles:true, composed: true }) cleanCalendarSelection: EventEmitter<any>;
+
+  @Element() el: HTMLElement;
+
   private numberOfPeriods:number = 5;
+  private monthNames = CONSTANTS['es-MX'].monthNames;
   @State() assignDate:Date = new Date();
   @State() dateForPeriods:Date = new Date();
   @State() arrayPeriods:CalendarEntry[] = [];
-  @Element() el: HTMLElement;
   @State() countDaysSelected = 0;
-  @State() showCalendarDouble = true;
+  @State() buttonContinue = false;
   @State() typeSelection: 'oneDay' | 'range' | 'period' = 'oneDay';
+
   @Listen('dc-applicationDate')
   applicationDate(event: CustomEvent){
     this.countDaysSelected = 1;
+    const date = this.convertCalendarEntryOnDate(event.detail);
+    this.showDate.emit([date]);
+    this.buttonContinue = true;
   }
   
   @Listen('dc-rangeDate')
   handlerRangeDate(event:CustomEvent){
-    const firstSelection = event.detail[0];
-    const lastSelection = event.detail[1];
+    const firstSelection = this.convertCalendarEntryOnDate(event.detail[0]);
+    const lastSelection = this.convertCalendarEntryOnDate(event.detail[1]);
     this.countSelectedDays(firstSelection, lastSelection);
+    this.showDate.emit([ firstSelection, lastSelection ]);
+    this.buttonContinue = true;
   }
 
   @Listen('dvnCalendarDoubleSetDate')
@@ -39,30 +51,35 @@ export class DoubleCalendarContainer {
   @Listen('dvnNextMonthCalendar')
   handlerChangeMonthCalendar(){
     this.countDaysSelected = 0;
+    this.buttonContinue = false;
   }
 
-  countSelectedDays(firstSelection:CalendarEntry, lastSelection: CalendarEntry){
-    const firtsDate = new Date(firstSelection.year, firstSelection.month, firstSelection.day).getTime();
-    const lastDate = new Date(lastSelection.year, lastSelection.month, lastSelection.day).getTime();
-    const diffInMls = lastDate - firtsDate;
+  private convertCalendarEntryOnDate(date: CalendarEntry):Date {
+    return new Date(date.year, date.month, date.day)
+  }
+
+  private countSelectedDays(firstSelection:Date, lastSelection: Date){    
+    const diffInMls = lastSelection.getTime() - firstSelection.getTime();
     const diffInDays = diffInMls / (1000 * 60 * 60 * 24);
     this.countDaysSelected = Math.abs(diffInDays) + 1;
   }
 
-  calculateLastDayOfMonth(year: number, month: number){
+  private calculateLastDayOfMonth(year: number, month: number):number {
     const firstDayOfNextMonth = new Date(year, month + 1, 1);
     const lastDayOfMonth = new Date(firstDayOfNextMonth.getTime() - 1);
     const daysInMonth = lastDayOfMonth.getDate();  
     return daysInMonth;
   }
 
-  handlerForTypeSelection(type:'oneDay' | 'range' | 'period'){
+  private handlerForTypeSelection(type:'oneDay' | 'range' | 'period'){
     this.cleanPeriodsPreview();
     this.countDaysSelected = 0;
     this.typeSelection = type;
+    this.showDate.emit();
+    this.buttonContinue = false;
   }
 
-  cleanPeriodsPreview(){
+  private cleanPeriodsPreview(){
     const allPeriods = this.el.shadowRoot.querySelectorAll('.period-list label');
     const periods = Array.from(allPeriods);
     for (const label of periods) {
@@ -74,7 +91,7 @@ export class DoubleCalendarContainer {
     }
   }
 
-  markPeriodInLabel(e: Event, date:CalendarEntry){
+  private markPeriodInLabel(e: Event, date:CalendarEntry){
     if (this.typeSelection === 'period') {
       this.cleanPeriodsPreview();
       const input = e.target as HTMLInputElement;
@@ -83,14 +100,16 @@ export class DoubleCalendarContainer {
       label.classList.add('selected-period');
       this.assignDate = new Date(date.year, date.month, date.day);
       const lastDayMonth:number = this.calculateLastDayOfMonth(date.year, date.month);
-      this.countSelectedDays(
-        {day: 1, month: date.month, year:date.year},
-        {day: lastDayMonth, month: date.month, year:date.year}
-      );
+      const firstDate = this.convertCalendarEntryOnDate({day: 1, month: date.month, year:date.year})
+      const lastDay = this.convertCalendarEntryOnDate({day: lastDayMonth, month: date.month, year:date.year})
+      this.countSelectedDays(firstDate, lastDay);
+      const stringPeriod = `${CONSTANTS['es-MX'].monthNames[firstDate.getMonth()]} ${firstDate.getFullYear()}`
+      this.showDate.emit([ firstDate, lastDay, stringPeriod ]);
+      this.buttonContinue = true;
     }
   }  
   
-  buildPeriods():CalendarEntry[] {
+  private buildPeriods():CalendarEntry[] {
     const periods = [];
     const dateReference:Date = new Date(
       this.dateForPeriods.getFullYear(),
@@ -110,14 +129,25 @@ export class DoubleCalendarContainer {
     return periods
   }
 
-  changePeriod(value:number) {
+  private changePeriod(value:number) {
     if (this.typeSelection === 'period') {
       this.cleanPeriodsPreview();
+      this.changeCleanPeriod.emit();
       this.dateForPeriods = new Date(this.dateForPeriods.setMonth(this.dateForPeriods.getMonth() + value));
     }
   }
 
-  renderForm(){
+  private goToToday(){
+    this.handlerForTypeSelection('oneDay');
+    const nodeInput = this.el.shadowRoot.querySelector('#forDay') as HTMLInputElement;
+    nodeInput.checked = true;
+    this.assignDate = new Date();
+    this.dateForPeriods= new Date();
+    this.showDate.emit();
+    this.cleanCalendarSelection.emit();
+  }
+
+  private renderForm(){
     return this.buildPeriods().map( date =>{
       return (
         <label htmlFor={`period${this.monthNames[date.month]}${date.year}`}>
@@ -139,25 +169,10 @@ export class DoubleCalendarContainer {
     });
   }
 
-  goToToday(){
-    this.handlerForTypeSelection('period');
-    this.handlerForTypeSelection('oneDay');
-    const nodeInput = this.el.shadowRoot.querySelector('#forDay') as HTMLInputElement;
-    nodeInput.checked = true;
-    this.assignDate = new Date();
-    this.dateForPeriods= new Date();
-  }
-
-  continue(){}
-
   render() {
     return (
       <Host>
-        <div class='select-date'>
-
-        </div>
-
-        <div class={this.showCalendarDouble ? 'container' : 'container hidden'}>
+        <div class='container'>
           <form class='type-selection'>
             <label htmlFor="forDay">
               <input 
@@ -213,7 +228,9 @@ export class DoubleCalendarContainer {
 
           <button class='go-today' onClick={ ()=> this.goToToday()}>Ir a hoy</button>
 
-          <button class='button-continue' onClick={()=> this.continue()}>
+          <button 
+            class={ this.buttonContinue ? 'button-continue completed' : 'button-continue' } 
+            onClick={()=> this.closeDoubleCalendar.emit(this.buttonContinue)}>
             Continuar
           </button>
         </div>

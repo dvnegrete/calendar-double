@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, Prop, State, Watch, h } from '@stencil/core';
+import { Component, Event, EventEmitter, Listen, Prop, State, Watch, h } from '@stencil/core';
 import { CalendarEntry } from '../../utils/interfaces/calendarEntry';
 import { PositionRange } from '../../utils/enum/positionRange';
 import { CONSTANTS } from '../shared/constants';
@@ -20,14 +20,13 @@ export class CalendarSingle {
   private baseNameMonth: string = this.monthNames[this.setCalendar.month];
   @Prop() dateCalendar: CalendarEntry;
   @Prop() numberCalendar: 'main' | 'secondary' = null;
-  @Prop() positionRange: PositionRange[] = null; 
+  @Prop({ reflect: true, mutable: true }) positionRange: PositionRange[] = null; 
   @Prop() typeSelection: 'oneDay' | 'range' | 'period' = 'oneDay';
   @Watch('typeSelection')
   handlerTypeSelection(newType:string, oldType:string){
     if (newType !== oldType) {
       this.daysInMonthRender();
-    }
-    
+    }    
   }
   
   @State() valueCalendar: CalendarEntry;
@@ -48,6 +47,17 @@ export class CalendarSingle {
       this.daysInMonth = this.writeMonth();
     }
   }
+
+  @Listen('dc-changeCleanPeriod', { target: 'window' })
+  handlerChangeCleanPeriod(){
+    this.positionRange = null;
+  }
+  
+  @Listen('dc-cleanCalendarSelection', { target: 'window' })
+  handlerCleanCalendarSelection(){
+    this.positionRange = null;
+  }
+
   private startDay(date: CalendarEntry){
     const start = new Date(date.year, date.month, date.day);
     return start.getDay();
@@ -119,7 +129,7 @@ export class CalendarSingle {
   }
 
   private verifyLimit(day:number){
-    //Desarrollar logica para limite deseado
+    //Desarrollar lógica para limite deseado
     if (this.calendarActive || this.typeSelection === 'period' && Array.isArray(this.positionRange)) {
       return true;
     }
@@ -143,39 +153,49 @@ export class CalendarSingle {
     }
   }
 
-  private markTheWholeMonth(day: number){
-    if (day === 1 || day === this.totalDaysInTheMonth) {
-      return 'selected';
-    } else {
-      return 'inside-the-range'
-    }
+  validateOneDay(){
+    return this.typeSelection === 'oneDay' && Array.isArray(this.positionRange);
+  }
+  
+  validateRange(){
+    return this.typeSelection === 'range' && Array.isArray(this.positionRange);
+  }
+
+  validateTwoPositionsOfRange(day: number){
+    return day > Number(this.positionRange[0]) && day < Number(this.positionRange[1])
+  }
+
+  validatePeriod(){
+    return this.typeSelection === 'period' && Array.isArray(this.positionRange) && this.positionRange.includes(PositionRange.all);
   }
 
   private nameClassToElement(day: number){
     const classInRange = this.verifyLimit(day) ? 'in-range' : '';
+    const classIsNow = this.dayCalendarIsNow(day) ? 'is-now' : '';
     let classSelected = ''; 
     let classInsideTheRange = '';
     let classAllMonth = '';
-    if (this.typeSelection === 'range' && Array.isArray(this.positionRange)) {
+    if (this.validateOneDay()) {
       classSelected = this.positionRange.some( dayParam => dayParam === day) ? 'selected' : '';
+
+    } else if (this.validateRange()) {
+      classSelected = this.positionRange.some( dayParam => dayParam === day) ? 'selected' : '';
+
       if ( this.positionRange.includes(PositionRange.firstDay) ){
-        const limit = Number(this.positionRange[1]);
-        classInsideTheRange = day < limit ? 'inside-the-range' : '';
-      } else if ( this.positionRange.includes(PositionRange.lastDay )) {
-        const limit = Number(this.positionRange[0]);
-        classInsideTheRange = day > limit ? 'inside-the-range' : '';
+        classInsideTheRange = day < Number(this.positionRange[1]) ? 'inside-the-range' : '';
+
+      } else if ( this.positionRange.includes(PositionRange.lastDay) ) {
+        classInsideTheRange = day > Number(this.positionRange[0]) ? 'inside-the-range' : '';
+
       } else if (this.positionRange.length === 2){
         this.positionRange.sort( (a,b)=>  Number(a)-Number(b) )
-        const firstDayRange = Number(this.positionRange[0]);
-        const lastDayRange = Number(this.positionRange[1]);
-        classInsideTheRange = day > firstDayRange && day < lastDayRange ? 'inside-the-range' : '';
+        classInsideTheRange = this.validateTwoPositionsOfRange(day) ? 'inside-the-range' : '';
+
       }
-    } else if (this.typeSelection === 'oneDay' && Array.isArray(this.positionRange)) {
-      classSelected = this.positionRange.some( dayParam => dayParam === day) ? 'selected' : '';
-    } else if (this.typeSelection === 'period' && Array.isArray(this.positionRange) && this.positionRange.includes(PositionRange.all)) {
-      classAllMonth = this.markTheWholeMonth(day);
+    } else if (this.validatePeriod()) {
+      classAllMonth = (day === 1 || day === this.totalDaysInTheMonth) ? 'selected' : 'inside-the-range';
     }
-    const classIsNow = this.dayCalendarIsNow(day) ? 'is-now' : '';
+    
     const combinedClass = [classInRange, classInsideTheRange, classSelected, classAllMonth, classIsNow ].filter(Boolean).join(' ');
     return combinedClass;
   }
@@ -204,7 +224,7 @@ export class CalendarSingle {
             name-inactive={ !this.calendarActive }
           ></header-calendar>
 
-          <div class='day-names'>
+          <div class={ this.calendarActive ? 'day-names' : 'day-names inactive'}>
             { this.dayNames.map( dayname => {
               return (<span>{dayname}</span>)
             }) }
