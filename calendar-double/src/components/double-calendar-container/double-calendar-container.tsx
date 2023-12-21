@@ -134,6 +134,7 @@ export class DoubleCalendarContainer {
       this.cleanPeriodsPreview();
       this.changeCleanPeriod.emit();
       this.dateForPeriods = new Date(this.dateForPeriods.setMonth(this.dateForPeriods.getMonth() + value));
+      this.buttonContinue = false;
     }
   }
 
@@ -210,21 +211,23 @@ export class DoubleCalendarContainer {
             mainDateReceived={ this.assignDate }
           />          
 
-          <form class={this.typeSelection === 'period' ? 'period-list' : 'period-list disabled'}>
-            <img 
-              src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg"
-              alt="anterior"
-              onClick={ ()=>this.changePeriod(-1) }
-            />
-            { this.renderForm() }
-            <img 
-              src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg"
-              alt="siguiente"
-              onClick={ ()=>this.changePeriod(1) }
-            />
-          </form>
+          <div class={this.typeSelection === 'period' ? 'period-list' : 'period-list disabled'}>
+              <img 
+                src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg"
+                alt="anterior"
+                onClick={ ()=>this.changePeriod(-1) }
+              />
+              <form >
+                { this.renderForm() }
+              </form>
+              <img 
+                src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg"
+                alt="siguiente"
+                onClick={ ()=>this.changePeriod(1) }
+              />
+          </div>
 
-          <p class='counter-days'>Dias seleccionados: {this.countDaysSelected}</p>
+          <p class='counter-days'>Dias seleccionados: <span>{this.countDaysSelected}</span></p>
 
           <button class='go-today' onClick={ ()=> this.goToToday()}>Ir a hoy</button>
 

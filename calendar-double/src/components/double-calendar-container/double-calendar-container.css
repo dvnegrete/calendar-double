@@ -1,5 +1,6 @@
 :host {  
-  font-size: 62.5%;
+  font-size: 0.9rem;
+  font-family: sans-serif;
 }
 
 .container {
@@ -7,16 +8,16 @@
   border-radius: 4px;
   box-shadow: 0px 6px 18px 0px rgba(0, 45 , 114, 0.15);
   position: absolute;
-  width: 500px;
-  height: 310px;
-  padding: 20px;
+  max-width: 700px;
+  max-height: 400px;
+  padding: 2%;
   display: grid;
-  grid-template-columns: 190px 190px 120px;
-  grid-template-rows: 45px 210px 55px;
+  grid-template-columns: 1fr 4fr 2fr;
+  grid-template-rows: 2fr auto 2fr;
   grid-template-areas: 
   'header header header'
   'calendar calendar period'
-  'days now button';
+  'now days button';
 }
 
 .hidden {
@@ -28,11 +29,8 @@
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  height: 40px;
-  width: inherit;
   border-bottom: 1px solid var(--inactive-color, rgb(179,179,179));
   padding-bottom: 4px;
-  font-size: 12px;
 }
 
 .type-selection label {
@@ -47,17 +45,15 @@
 }
 
 .button-continue {
-  grid-area: button;
-  height: 32px;
-  width: 96px;
+  grid-area: button;  
+  align-self: center;
+  justify-self: center;
   background-color: var(--primary-color, #056dae);
-  color: var(--inactive-color, rgb(179, 179, 179));
-  font-size: 14px;
-  font-weight: normal;
   border: none;
   border-radius: 6px;
-  justify-self: center;
-  align-self: center;
+  color: var(--inactive-color, rgb(179, 179, 179));
+  font-weight: normal;
+  padding: 8px;
 }
 
 .completed {
@@ -70,10 +66,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 10px;
-  padding: 15px 2px;  
-  height: 160px;
-  width: 125px;
+  justify-content: space-between;
+  font-size: 0.75rem; 
+  padding: 15% 0 15% 4%;
 }
 
 .period-list img {
@@ -88,13 +83,15 @@
   rotate: 90deg;  
 }
 
-.period-list label {
-  padding: 7px 5px;
-  width: 100px;
+.period-list form {
+  border-left: 1px solid var(--inactive-color, rgb(179,179,179));
+  padding-left: 7%;
+}
+
+.period-list form label {
+  padding: 6% 0;
   cursor: pointer;
-  transition: margin 0.5s ease-in-out;
   display: flex;
-  justify-content: center;
 }
 
 .disabled {
@@ -102,7 +99,7 @@
   cursor: default;
 }
 
-.period-list input {
+.period-list form input {
   margin: 0;
   margin-right: 3px;
   vertical-align: middle;
@@ -115,22 +112,82 @@
 
 .counter-days {
   grid-area: days;
-  font-size: 12px;
-  align-items: center;
+  margin: auto;
 }
 
 .go-today {
   grid-area: now;
-  height: 25px;
-  width: 55px;
   color: var(--primary-color, #0075c0);
   background: none;
-  font-size: 10px;
-  padding: 5px;
+  font-size: 0.75rem;
+  padding: 7px;
   font-weight: 600;
   border: solid 1px;
-  border-radius: 3em;
-  justify-self: flex-start;
+  border-radius: 6px;
+  justify-self: center;
   align-self: center;
   cursor: pointer;
+}
+
+@media (min-width: 150px) and (max-width: 520px) {
+  .container {   
+    max-width: max-content;
+    max-height: max-content;
+    padding: 2%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr auto auto 1fr;
+    grid-template-areas: 
+    'header header'
+    'calendar calendar'
+    'period period'
+    'now days'
+    'button button';
+  }
+
+  .type-selection {    
+    flex-flow: wrap;
+    justify-content: space-around;
+  }
+  
+  .type-selection label {
+    align-items: center;
+    padding: 2%;
+  }
+
+  .period-list {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1% 5px;
+    border-bottom: 1px solid var(--inactive-color, rgb(179,179,179));
+    border-top: 1px solid var(--inactive-color, rgb(179,179,179));
+  }
+
+  .period-list form {
+    border: none;
+    padding: 0;
+  }
+
+  .period-list form label {
+    flex-direction: row;
+    padding: 5% 0;    
+  }
+
+  .period-list img {
+    rotate: 180deg;
+  }
+  .period-list img:last-child {
+    rotate: none;
+  }
+
+  .counter-days {
+    margin: none;
+    padding: 6% 0;
+    text-align: center;
+  }
+
+  .button-continue {
+    margin-top: 3%;
+  }
+  
 }

@@ -1,10 +1,12 @@
-
-header {  
+header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 0;
-  height: 21px;
+  padding: 3% 0;
+}
+
+span {
+  min-width: fit-content;
 }
 
 .button-next {
@@ -15,6 +17,7 @@ header {
 
 .button-next img {
   height: 15px;
+  padding: 0 3px;
 }
 
 .empty {
@@ -25,9 +28,10 @@ header {
   color: var(--inactive-color, rgb(179,179,179));
 }
 
-.hidden  {
+.hidden {
   width: 15px;
 }
-.hidden  img{
+
+.hidden  img {
   display: none;
 }

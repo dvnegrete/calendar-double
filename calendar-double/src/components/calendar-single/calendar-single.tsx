@@ -216,7 +216,7 @@ export class CalendarSingle {
   render() {
     return (
       <div class='container-calendar'>
-        <div class='calendar'>
+        
           <header-calendar 
             name-month={ this.baseNameMonth }
             year={ this.year }
@@ -233,7 +233,6 @@ export class CalendarSingle {
             <ol class='days-in-month'>
               { this.daysInMonthRender() }
             </ol>
-        </div>
       </div>
     );
   }

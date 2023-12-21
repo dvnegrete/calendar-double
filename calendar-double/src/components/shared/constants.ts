@@ -1,13 +1,13 @@
 export const CONSTANTS = {
     'es-MX':{
         daynames : [
-            'Dom',
-            'Lun',
-            'Mar',
-            'Mie',
-            'Jue',
-            'Vie',
-            'Sab',
+            'Do',
+            'Lu',
+            'Ma',
+            'Mi',
+            'Ju',
+            'Vi',
+            'Sa',
         ],
         monthNames : [
             'Enero',
