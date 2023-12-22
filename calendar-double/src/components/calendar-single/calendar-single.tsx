@@ -128,16 +128,18 @@ export class CalendarSingle {
     return this.setCalendar.month === monthNow && day === dayNow;
   }
 
-  private verifyLimit(day:number){
-    //Desarrollar lógica para limite deseado
-    if (this.calendarActive || this.typeSelection === 'period' && Array.isArray(this.positionRange)) {
+  /*
+  **  Desarrollar lógica para limite deseado usando: verifyLimit(day:number)
+  */ 
+  private verifyLimit(){
+    if ( this.calendarActive || this.typeSelection === 'period' && Array.isArray(this.positionRange)) {
       return true;
     }
     return false;
   }
 
   private daySelectedHandler(day:number){
-    const isInsideLimit = this.verifyLimit(day);
+    const isInsideLimit = this.verifyLimit();
     if (isInsideLimit ) {
       const selectedDate: CalendarEntry = {
         day,
@@ -170,7 +172,7 @@ export class CalendarSingle {
   }
 
   private nameClassToElement(day: number){
-    const classInRange = this.verifyLimit(day) ? 'in-range' : '';
+    const classInRange = this.verifyLimit() ? 'in-range' : '';
     const classIsNow = this.dayCalendarIsNow(day) ? 'is-now' : '';
     let classSelected = ''; 
     let classInsideTheRange = '';
