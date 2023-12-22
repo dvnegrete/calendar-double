@@ -139,7 +139,7 @@
     padding: 2%;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr auto auto 1fr;
+    grid-template-rows: 1fr auto auto auto 1fr;
     grid-template-areas: 
     'header header'
     'calendar calendar'
@@ -159,11 +159,13 @@
   }
 
   .period-list {
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 1% 5px;
     border-bottom: 1px solid var(--inactive-color, rgb(179,179,179));
     border-top: 1px solid var(--inactive-color, rgb(179,179,179));
+    flex-direction: row;
+    justify-content: space-around;
+    height: 50%;
+    overflow: hidden;
+    padding: 1% 5px;
   }
 
   .period-list form {
@@ -178,6 +180,7 @@
 
   .period-list img {
     rotate: 180deg;
+    padding: 20px;
   }
   .period-list img:last-child {
     rotate: none;
