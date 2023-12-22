@@ -73,3 +73,19 @@ The first step for all three of these strategies is to [publish to NPM](https://
 - Run `npm install my-component --save`
 - Add an import to the npm packages `import my-component;`
 - Then you can use the element anywhere in your template, JSX, html etc
+
+# CSS Custom Properties.
+
+## Colors (Defaul value)
+- --primary-color, #056dae
+- --secondary-color, #0075c0
+- --tertiary-color, #def6ff
+- --inactive-color, rgb(179,179,179)
+- --backgroud-color, rgb(255, 255, 255)
+- --border-color, rgb(204, 204, 204)
+- --font-color, rgb(50, 50, 50)
+
+## font-family
+- --font-light, 'InterStateL', sans-serif
+
+

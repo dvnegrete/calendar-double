@@ -3,11 +3,12 @@
   margin: 0;
   box-sizing: border-box;  
   font-size: 0.9rem;
-  font-family: sans-serif;
+  font-family: var(--font-light, 'InterStateL', sans-serif);
+  color: var(--font-color, rgb(50, 50, 50));
 }
 
 .container {
-  background-color: var(--secondary-color,#fff);
+  background-color: var(--backgroud-color,rgb(255, 255, 255));
   border-radius: 4px;
   box-shadow: 0px 6px 18px 0px rgba(0, 45 , 114, 0.15);
   position: absolute;
@@ -61,7 +62,7 @@
 
 .completed {
   cursor: pointer;
-  color: var(--secondary-color, #fff);
+  color: var(--backgroud-color, rgb(255, 255, 255));
 }
 
 .period-list {
@@ -109,7 +110,7 @@
 }
 
 .period-list .selected-period {
-  border: solid 1.5px var(--primary-color, #0075c0);
+  border: solid 1.5px var(--secondary-color, #0075c0);
   border-radius: 50%;  
 }
 
@@ -120,7 +121,7 @@
 
 .go-today {
   grid-area: now;
-  color: var(--primary-color, #0075c0);
+  color: var(--secondary-color, #0075c0);
   background: none;
   font-size: 0.75rem;
   padding: 7px;

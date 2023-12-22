@@ -33,7 +33,7 @@
   grid-template-columns: repeat(7, 1fr);
   padding: 0;
   margin: 0;
-  color: rgb(179, 179, 179);
+  color: var(--inactive-color, rgb(179,179,179));
   background-color: transparent;
 }
 
@@ -62,8 +62,8 @@
 }
 
 .days-in-month .selected {
-  background-color: var(--primary-color, #0075c0);
-  color: var(--secondary-color,#fff);
+  background-color: var(--secondary-color, #0075c0);
+  color: var(--backgroud-color, rgb(255, 255, 255));
 }
 
 li.selected:nth-child(7n + 1),
@@ -72,21 +72,21 @@ li.selected:nth-child(7n + 7){
 }
 
 .in-range {
-  color: black;
+  color: var(--font-color, rgb(50, 50, 50));
   cursor: pointer;
   border-radius: 50%;
 }
 
 .is-now {
-  border: solid 1px var(--primary-color, #0075c0);
+  border: solid 1px var(--secondary-color, #0075c0);
   width: 21px;
   border-radius: 50%;
 }
 
 .days-in-month .inside-the-range {
-  background-color: #def6ff;
+  background-color: var(--tertiary-color, #def6ff);
   border-radius: 0px;
-  color: #0075c0;
+  color: var(--secondary-color, #0075c0);
 }
 
 li.is-now:nth-child(7n + 1),

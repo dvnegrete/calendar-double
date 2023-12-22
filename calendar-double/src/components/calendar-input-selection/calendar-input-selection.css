@@ -7,8 +7,8 @@
 .select-date {
   cursor: pointer;
   border-radius: 3px;
-  background: rgb(255, 255, 255);
-  border: 1px solid rgb(204, 204, 204);
+  background: var(--backgroud-color, rgb(255, 255, 255));
+  border: 1px solid var(--border-color, rgb(204, 204, 204));
   height: 32px;
   max-width: 225px;
   display: flex;
@@ -22,9 +22,9 @@
 }
 
 .day-selectet-text {
-  color: rgb(50, 50, 50);
+  color: var(--font-color, rgb(50, 50, 50));
   font-size: 0.8rem;
-  font-family: var(--fontLight, 'InterStateL', sans-serif);
+  font-family: var(--fontlight, 'InterStateL', sans-serif);
   font-weight: 300;
   letter-spacing: 0;
   line-height: 16px;
@@ -34,8 +34,8 @@
 .box {
   width: 30px;
   height: 100%;
-  background-color: var(--primaryColor, #ffffff);
-  border: 1px solid rgb(204, 204, 204);
+  background-color: var(--backgroud-color, rgb(255, 255, 255));
+  border: 1px solid var(--border-color, rgb(204, 204, 204));
   border-right: none;
   border-radius: 0 2px 2px 0;
   display: flex;
@@ -44,5 +44,5 @@
 }
 
 .box-selected {
-  background-color: var(--secondaryColor, #0075c0);
+  background-color: var(--secondary-color, #0075c0);
 }

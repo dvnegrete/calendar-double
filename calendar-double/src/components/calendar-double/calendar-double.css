@@ -4,4 +4,6 @@
   box-sizing: border-box;
   display: flex;
   justify-content: space-evenly;
+  color: var(--font-color, rgb(50, 50, 50));
+  background: var(--backgroud-color, rgb(255, 255, 255));
 }
