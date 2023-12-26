@@ -1,6 +1,6 @@
 {
   "name": "dvn-calendar-double",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Stencil Component Starter Double Calendar",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -12,7 +12,7 @@
   "unpkg": "dist/calendar-double/calendar-double.esm.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ionic-team/stencil-component-starter.git"
+    "url": "https://github.com/dvnegrete/calendar-double/tree/main/calendar-double"
   },
   "files": [
     "dist/",

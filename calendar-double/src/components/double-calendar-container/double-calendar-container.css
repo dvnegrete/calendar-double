@@ -134,7 +134,8 @@
 }
 
 @media (min-width: 150px) and (max-width: 520px) {
-  .container {   
+  .container {
+    left: 0;
     max-width: max-content;
     max-height: max-content;
     padding: 2%;
@@ -197,4 +198,11 @@
     margin-top: 3%;
   }
   
+}
+
+@media (min-width: 521px) and (max-width: 790px) {
+ .container{
+    left: 5vw;
+ }
+
 }
