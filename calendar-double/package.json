@@ -1,6 +1,6 @@
 {
   "name": "dvn-calendar-double",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Stencil Component Starter Double Calendar",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
