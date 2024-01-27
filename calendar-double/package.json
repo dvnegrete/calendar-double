@@ -21,8 +21,11 @@
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
+    "test": "stencil test --spec",
+    "test:jenkins": "stencil test --spec --coverage",
+    "test:jenkins.watch": "stencil test --spec --coverage --watchAll",
+    "test.watch": "stencil test --spec --watchAll",
+    "test:coverage": "jest -u",
     "generate": "stencil generate"
   },
   "dependencies": {
