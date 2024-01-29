@@ -21,7 +21,7 @@ export class CalendarSingle {
   @Prop() dateCalendar: CalendarEntry;
   @Prop() numberCalendar: 'main' | 'secondary' = null;
   @Prop({ reflect: true, mutable: true }) positionRange: PositionRange[] = null; 
-  @Prop() typeSelection: 'oneDay' | 'range' | 'period' = 'oneDay';
+  @Prop( { mutable:true } ) typeSelection: 'oneDay' | 'range' | 'period' = 'oneDay';
   @Watch('typeSelection')
   handlerTypeSelection(newType:string, oldType:string){
     if (newType !== oldType) {
@@ -33,7 +33,7 @@ export class CalendarSingle {
   @State() daysInMonth: number[];
   @State() sendFromThisCalendar:CalendarEntry = null;
   
-  @Prop() calendarActive: boolean = null;  
+  @Prop( { mutable:true } ) calendarActive: boolean = null;  
   @Watch('calendarActive')
   handlerWatchProp(){
     this.daysInMonthRender();

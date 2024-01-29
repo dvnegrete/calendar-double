@@ -24,7 +24,7 @@ export class CalendarDouble {
   @State() positionRangeMain: PositionRange[] = null;
   @State() positionRangeSecondary: PositionRange[] = null;
 
-  @Prop() mainDateReceived:Date = null;
+  @Prop( { mutable:true } ) mainDateReceived:Date = null;
   @Watch('mainDateReceived')
   handlerChangeDateReceived(){
     this.setCalendarMain = this.getDateNow();
@@ -32,7 +32,7 @@ export class CalendarDouble {
     this.positionRangeMain = [PositionRange.all]
   }
   
-  @Prop() typeSelection: 'oneDay' | 'range' | 'period' =  'oneDay';
+  @Prop( { mutable:true } ) typeSelection: 'oneDay' | 'range' | 'period' =  'oneDay';
   @Watch('typeSelection')
   handlerTypeSelection(newType:string, oldType:string){
     if (newType !== oldType) {
@@ -69,6 +69,15 @@ export class CalendarDouble {
     this.setDate();
   }
 
+  /**
+   * 
+   * @param event receives object:
+   * detail: { 
+   *   name: 'secondary' | 'main',
+   *   date: CalendarEntry
+   * }
+   * 
+   */
   @Listen('dvn-valueCalendarSelected')
   calendarSingleDaySelected(event: CustomEvent) {
     this.assignValuePositionOneDay(event);
@@ -144,7 +153,6 @@ export class CalendarDouble {
         ? [event.detail.date.day]
         : this.setRangeOfDaysInASingleCalendar(event);
     }
-
   }
 
   private setRangeOfDaysInASingleCalendar(event: CustomEvent){
@@ -153,7 +161,6 @@ export class CalendarDouble {
     } else {
       return this.setRangeDayOnBothCalendars(event);
     }
-    
   }
   
   private setRangeDayOnBothCalendars(event:CustomEvent){

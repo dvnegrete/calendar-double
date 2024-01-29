@@ -3,7 +3,6 @@ import { newSpecPage } from '@stencil/core/testing';
 import { CalendarSingle } from '../calendar-single';
 import { PositionRange } from '../../../utils/enum/positionRange';
 import { CalendarEntry } from '../../../utils/interfaces/calendarEntry';
-import exp from 'constants';
 
 describe('calendar-single', () => {
   
