@@ -27,7 +27,6 @@ describe('header-calendar', () => {
       components: [HeaderCalendar],
       template: ()=> (<header-calendar two-arrow="true"/>),
     });
-    console.log(page.rootInstance);
     expect(page.root).toEqualHtml(`
     <header-calendar two-arrow="true">
         <mock:shadow-root>
@@ -55,7 +54,6 @@ describe('header-calendar', () => {
       components: [HeaderCalendar],
       template: ()=> (<header-calendar two-arrow="true" name-inactive="true"/>),
     });
-    console.log(page.rootInstance);
     expect(page.root).toEqualHtml(`
     <header-calendar two-arrow="true" name-inactive="true">
         <mock:shadow-root>

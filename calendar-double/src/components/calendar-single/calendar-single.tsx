@@ -17,7 +17,7 @@ export class CalendarSingle {
   private totalDaysInTheMonth: number = null;  
   private year: string;  
   @Prop({ reflect: true, mutable: true }) setCalendar: CalendarEntry = {month:11, year:2023, day:19};
-  private baseNameMonth: string = this.monthNames[this.setCalendar.month];
+  private baseNameMonth: string = this.monthNames[0];
   @Prop() dateCalendar: CalendarEntry;
   @Prop() numberCalendar: 'main' | 'secondary' = null;
   @Prop({ reflect: true, mutable: true }) positionRange: PositionRange[] = null; 
@@ -99,7 +99,7 @@ export class CalendarSingle {
     }
   }
 
-  private writeMonth ():number[] {
+  writeMonth ():number[] {
     let content = [];
     this.valueCalendar = this.setCalendar;
     for (let i = this.startDay(this.valueCalendar); i > 0; i--) {
@@ -115,10 +115,11 @@ export class CalendarSingle {
   }
 
   componentWillLoad(){
+    this.baseNameMonth = this.monthNames[this.setCalendar.month];
     this.daysInMonth = this.writeMonth();
   }
 
-  private dayCalendarIsNow(day:number):boolean {
+  dayCalendarIsNow(day:number):boolean {
     const now = new Date();
     const monthNow = now.getMonth();
     const dayNow = now.getDate();
@@ -138,7 +139,7 @@ export class CalendarSingle {
     return false;
   }
 
-  private daySelectedHandler(day:number){
+  daySelectedHandler(day:number){
     const isInsideLimit = this.verifyLimit();
     if (isInsideLimit ) {
       const selectedDate: CalendarEntry = {
@@ -202,7 +203,7 @@ export class CalendarSingle {
     return combinedClass;
   }
 
-  private daysInMonthRender(){
+  daysInMonthRender(){
     return this.daysInMonth.map( day =>{
       const combinedClass = this.nameClassToElement(day);
       if (day === 0) {
