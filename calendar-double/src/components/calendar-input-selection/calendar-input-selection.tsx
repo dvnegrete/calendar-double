@@ -10,6 +10,16 @@ export class CalendarInputSelection {
   @State() placeholder = 'Selecciona una fecha';
   @State() showCalendarDouble = false;
 
+  /**
+   * 
+   * @param event receives <Array<Date | string>>
+   * You can receive the following three forms.
+   * 1) oneDay: [date:<Date>]
+   * 2) range: [firstDate:<Date>, lastDate:<Date>]
+   * 3) period: [firstDate:<Date>, lastDate:<Date>, date:<string>]
+   * 4) null
+   * 
+   */
   @Listen('dvn-arrayDatesSelected')
   handlerDatesSelected(event: CustomEvent){
     if (Array.isArray(event.detail)) {
@@ -18,7 +28,10 @@ export class CalendarInputSelection {
       this.placeholder = this.defaultPlaceholder;
     }
   }
-
+  /**
+   * 
+   * @param event receives boolean
+   */
   @Listen('dvn-closeDoubleCalendar')
   handlerCloseDoubleCalendar(event: CustomEvent){
     this.showCalendarDouble = !event.detail;
@@ -44,7 +57,7 @@ export class CalendarInputSelection {
     }
   }
 
-  private handleClick(){
+  handleClick(){
     this.showCalendarDouble = !this.showCalendarDouble;
   }
 
