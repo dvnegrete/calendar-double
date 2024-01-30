@@ -24,6 +24,11 @@ export class DoubleCalendarContainer {
   @State() buttonContinue = false;
   @State() typeSelection: 'oneDay' | 'range' | 'period' = 'oneDay';
 
+  /**
+   * 
+   * @param event receives <CalendarEntry>
+   * 
+   */
   @Listen('dvn-applicationDate')
   applicationDate(event: CustomEvent){
     this.countDaysSelected = 1;
@@ -32,6 +37,11 @@ export class DoubleCalendarContainer {
     this.buttonContinue = true;
   }
   
+   /**
+   * 
+   * @param event receives <CalendarEntry[]>
+   * 
+   */
   @Listen('dvn-rangeDate')
   handlerRangeDate(event:CustomEvent){
     const firstSelection = this.convertCalendarEntryOnDate(event.detail[0]);
@@ -41,6 +51,11 @@ export class DoubleCalendarContainer {
     this.buttonContinue = true;
   }
 
+  /**
+   * 
+   * @param event receives <CalendarEntry>
+   * 
+   */
   @Listen('dvn-calendarDoubleSetDate')
   handlerCalendarDobleSetDate(event: CustomEvent){
     const setNewDate:CalendarEntry = event.detail;
@@ -71,7 +86,7 @@ export class DoubleCalendarContainer {
     return daysInMonth;
   }
 
-  private handlerForTypeSelection(type:'oneDay' | 'range' | 'period'){
+  handlerForTypeSelection(type:'oneDay' | 'range' | 'period'){
     this.cleanPeriodsPreview();
     this.countDaysSelected = 0;
     this.typeSelection = type;
@@ -79,7 +94,7 @@ export class DoubleCalendarContainer {
     this.buttonContinue = false;
   }
 
-  private cleanPeriodsPreview(){
+  cleanPeriodsPreview(){
     const allPeriods = this.el.shadowRoot.querySelectorAll('.period-list label');
     const periods = Array.from(allPeriods);
     for (const label of periods) {
@@ -91,10 +106,10 @@ export class DoubleCalendarContainer {
     }
   }
 
-  private markPeriodInLabel(e: Event, date:CalendarEntry){
+  markPeriodInLabel(event: Event, date:CalendarEntry){
     if (this.typeSelection === 'period') {
       this.cleanPeriodsPreview();
-      const input = e.target as HTMLInputElement;
+      const input = event.target as HTMLInputElement;
       input.checked = true;
       const label = input.parentElement;
       label.classList.add('selected-period');
@@ -103,11 +118,11 @@ export class DoubleCalendarContainer {
       const firstDate = this.convertCalendarEntryOnDate({day: 1, month: date.month, year:date.year})
       const lastDay = this.convertCalendarEntryOnDate({day: lastDayMonth, month: date.month, year:date.year})
       this.countSelectedDays(firstDate, lastDay);
-      const stringPeriod = `${CONSTANTS['es-MX'].monthNames[firstDate.getMonth()]} ${firstDate.getFullYear()}`
-      this.showDate.emit([ firstDate, lastDay, stringPeriod ]);
+      const stringPeriod = `${CONSTANTS['es-MX'].monthNames[firstDate.getMonth()]} ${firstDate.getFullYear()}`;
+      this.showDate.emit([firstDate, lastDay, stringPeriod]);
       this.buttonContinue = true;
     }
-  }  
+  }
   
   private buildPeriods():CalendarEntry[] {
     const periods = [];
@@ -129,7 +144,7 @@ export class DoubleCalendarContainer {
     return periods
   }
 
-  private changePeriod(value:number) {
+  changePeriod(value:number) {
     if (this.typeSelection === 'period') {
       this.cleanPeriodsPreview();
       this.changeCleanPeriod.emit();
@@ -138,7 +153,7 @@ export class DoubleCalendarContainer {
     }
   }
 
-  private goToToday(){
+  goToToday(){
     this.handlerForTypeSelection('oneDay');
     const nodeInput = this.el.shadowRoot.querySelector('#forDay') as HTMLInputElement;
     nodeInput.checked = true;
@@ -148,7 +163,7 @@ export class DoubleCalendarContainer {
     this.cleanCalendarSelection.emit();
   }
 
-  private renderForm(){
+  renderForm(){
     return this.buildPeriods().map( date =>{
       return (
         <label htmlFor={`period${this.monthNames[date.month]}${date.year}`}>
