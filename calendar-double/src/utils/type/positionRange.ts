@@ -1,0 +1,1 @@
+export type PositionRange = 'lastDay' | 'firstDay' | 'all' | number;

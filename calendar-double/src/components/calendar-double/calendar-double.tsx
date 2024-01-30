@@ -1,6 +1,6 @@
 import { Component, Event, EventEmitter, Host, Listen, Prop, State, Watch, h } from '@stencil/core';
 import { CalendarEntry } from './../../utils/interfaces/calendarEntry';
-import { PositionRange } from '../../utils/enum/positionRange';
+import { PositionRange } from '../../utils/type/positionRange';
 
 @Component({
   tag: 'calendar-double',
@@ -29,7 +29,7 @@ export class CalendarDouble {
   handlerChangeDateReceived(){
     this.setCalendarMain = this.getDateNow();
     this.setDateCalendarSecond();
-    this.positionRangeMain = [PositionRange.all]
+    this.positionRangeMain = ['all']
   }
   
   @Prop( { mutable:true } ) typeSelection: 'oneDay' | 'range' | 'period' =  'oneDay';
@@ -166,11 +166,11 @@ export class CalendarDouble {
   private setRangeDayOnBothCalendars(event:CustomEvent){
     this.sortRangeSelection();
     if (event.detail.name === 'main') {
-      this.positionRangeSecondary = [this.firstDayForRange.day, PositionRange.lastDay];
-      return [PositionRange.firstDay, this.lastDayForRange.day]
+      this.positionRangeSecondary = [this.firstDayForRange.day, 'lastDay'];
+      return ['firstDay', this.lastDayForRange.day]
     } else if (event.detail.name === 'secondary') {
-      this.positionRangeMain = [PositionRange.firstDay, this.lastDayForRange.day];
-      return [this.firstDayForRange.day, PositionRange.lastDay]
+      this.positionRangeMain = ['firstDay', this.lastDayForRange.day];
+      return [this.firstDayForRange.day, 'lastDay']
     }
   }
 

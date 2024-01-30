@@ -6,9 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CalendarEntry } from "./utils/interfaces/calendarEntry";
-import { PositionRange } from "./utils/enum/positionRange";
+import { PositionRange } from "./utils/type/positionRange";
 export { CalendarEntry } from "./utils/interfaces/calendarEntry";
-export { PositionRange } from "./utils/enum/positionRange";
+export { PositionRange } from "./utils/type/positionRange";
 export namespace Components {
     interface CalendarDouble {
         "mainDateReceived": Date;

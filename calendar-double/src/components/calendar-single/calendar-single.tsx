@@ -1,6 +1,6 @@
 import { Component, Event, EventEmitter, Listen, Prop, State, Watch, h } from '@stencil/core';
 import { CalendarEntry } from '../../utils/interfaces/calendarEntry';
-import { PositionRange } from '../../utils/enum/positionRange';
+import { PositionRange } from '../../utils/type/positionRange';
 import { CONSTANTS } from '../shared/constants';
 
 @Component({
@@ -169,7 +169,7 @@ export class CalendarSingle {
   }
 
   validatePeriod(){
-    return this.typeSelection === 'period' && Array.isArray(this.positionRange) && this.positionRange.includes(PositionRange.all);
+    return this.typeSelection === 'period' && Array.isArray(this.positionRange) && this.positionRange.includes('all');
   }
 
   private nameClassToElement(day: number){
@@ -184,10 +184,10 @@ export class CalendarSingle {
     } else if (this.validateRange()) {
       classSelected = this.positionRange.some( dayParam => dayParam === day) ? 'selected' : '';
 
-      if ( this.positionRange.includes(PositionRange.firstDay) ){
+      if ( this.positionRange.includes('firstDay') ){
         classInsideTheRange = day < Number(this.positionRange[1]) ? 'inside-the-range' : '';
 
-      } else if ( this.positionRange.includes(PositionRange.lastDay) ) {
+      } else if ( this.positionRange.includes('lastDay') ) {
         classInsideTheRange = day > Number(this.positionRange[0]) ? 'inside-the-range' : '';
 
       } else if (this.positionRange.length === 2){

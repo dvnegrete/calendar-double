@@ -188,21 +188,4 @@ describe('calendar-double', () => {
     expect(valueCalendarSelectedSpy).toHaveBeenCalledTimes(3);
   });
 
-  // it('should assign event in setForOneDay', async () => {
-  //   const page = await newSpecPage({
-  //     components: [CalendarDouble],
-  //     template: ()=> (
-  //       <calendar-double 
-  //         mainDateReceived={ new Date(2023,5,2) }
-  //         typeSelection='oneDay'
-  //       />
-  //     ),
-  //   });
-  //   const component = page.rootInstance as CalendarDouble;
-  //   const handlerChangeDateReceivedSpy = jest.spyOn(component, 'handlerChangeDateReceived');
-  //   component.mainDateReceived = new Date();
-  //   await page.waitForChanges();
-  //   expect(handlerChangeDateReceivedSpy).toHaveBeenCalled();
-  // });
-
 });

@@ -47,11 +47,11 @@ export class HeaderCalendar {
 
   render() {
     return (
-        <header>
-          { this.twoArrow || this.position === 'left' ? this.headerLeft() : this.headerEmpty() }
-          <span class={ this.nameInactive ? 'inactive' : '' }>{ this.nameMonth } { this.year }</span> 
-          { this.twoArrow || this.position === 'right' ? this.headerRight() : this.headerEmpty() }
-        </header>
+      <header>
+        { this.twoArrow || this.position === 'left' ? this.headerLeft() : this.headerEmpty() }
+        <span class={ this.nameInactive ? 'inactive' : '' }>{ this.nameMonth } { this.year }</span> 
+        { this.twoArrow || this.position === 'right' ? this.headerRight() : this.headerEmpty() }
+      </header>
     );
   }
 

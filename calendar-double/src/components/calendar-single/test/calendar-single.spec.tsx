@@ -1,7 +1,6 @@
 import { h } from '@stencil/core';
 import { newSpecPage } from '@stencil/core/testing';
 import { CalendarSingle } from '../calendar-single';
-import { PositionRange } from '../../../utils/enum/positionRange';
 import { CalendarEntry } from '../../../utils/interfaces/calendarEntry';
 
 describe('calendar-single', () => {
@@ -12,7 +11,7 @@ describe('calendar-single', () => {
       template: ()=> (
         <calendar-single 
           typeSelection='range'
-          positionRange={ [PositionRange.all] }
+          positionRange={ ['all'] }
           numberCalendar='main'
           calendarActive= { true }
         />
@@ -27,7 +26,7 @@ describe('calendar-single', () => {
       components: [CalendarSingle],
       template: ()=> (
         <calendar-single 
-          positionRange={ [PositionRange.all] }
+          positionRange={ ['all'] }
           calendarActive= { true }
         />
       ),
@@ -67,7 +66,7 @@ describe('calendar-single', () => {
         <calendar-single 
           setCalendar={ {month: 10, year: 2023, day: 14} }
           calendarActive= { true }
-          positionRange={ [PositionRange.all] }
+          positionRange={ ['all'] }
         />
       ),
     });
@@ -86,7 +85,7 @@ describe('calendar-single', () => {
         <calendar-single 
           setCalendar={ {month: 10, year: 2023, day: 14} }
           calendarActive= { true }
-          positionRange={ [PositionRange.all] }
+          positionRange={ ['all'] }
         />
       ),
     });
@@ -161,7 +160,7 @@ describe('calendar-single', () => {
       template: ()=> (
         <calendar-single 
           typeSelection='range'
-          positionRange={ [PositionRange.firstDay, 15] }
+          positionRange={ ['firstDay', 15] }
           setCalendar={ {month: 10, year: 2023, day: 18}}
           calendarActive= { true }
         />
@@ -177,7 +176,7 @@ describe('calendar-single', () => {
       template: ()=> (
         <calendar-single 
           typeSelection='range'
-          positionRange={ [20, PositionRange.lastDay] }
+          positionRange={ [20, 'lastDay'] }
           setCalendar={ {month: 10, year: 2023, day: 18}}
           calendarActive= { true }
         />
@@ -203,13 +202,13 @@ describe('calendar-single', () => {
     expect(dayElementLi.classList.contains('inside-the-range')).toBeTruthy();
   });
 
-  it('day "15" should contains class "inside-the-range" when receives PositionRange.all and typeSelection="period" ', async () => {
+  it('day "15" should contains class "inside-the-range" when receives Position.all and typeSelection="period" ', async () => {
     const page = await newSpecPage({
       components: [CalendarSingle],
       template: ()=> (
         <calendar-single 
           typeSelection='period'
-          positionRange={ [PositionRange.all] }
+          positionRange={ ['all'] }
           setCalendar={ {month: 10, year: 2023, day: 18}}
           calendarActive= { true }
         />
