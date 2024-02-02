@@ -1,7 +1,7 @@
 import { Component, Event, EventEmitter, Listen, Prop, State, Watch, h } from '@stencil/core';
 import { CalendarEntry } from '../../utils/interfaces/calendarEntry';
-import { PositionRange } from '../../utils/type/positionRange';
 import { CONSTANTS } from '../shared/constants';
+import { RangeLimitDirection, RangeLimitTotal, PositionRange, RangeLimitType } from '../../utils/type';
 
 @Component({
   tag: 'calendar-single',
@@ -14,10 +14,17 @@ import { CONSTANTS } from '../shared/constants';
 export class CalendarSingle {
   private dayNames = CONSTANTS['es-MX'].daynames;
   private monthNames = CONSTANTS['es-MX'].monthNames;
-  private totalDaysInTheMonth: number = null;  
-  private year: string;  
-  @Prop({ reflect: true, mutable: true }) setCalendar: CalendarEntry = {month:11, year:2023, day:19};
+  private totalDaysInTheMonth: number = null;
+  private year: string;
+ 
   private baseNameMonth: string = this.monthNames[0];
+
+  @Prop() limitType: RangeLimitType = null;
+  @Prop() limitDirection: RangeLimitDirection = null;
+  @Prop() limitTotal: RangeLimitTotal = null;
+  dateBackward;
+  dateForward;
+
   @Prop() dateCalendar: CalendarEntry;
   @Prop() numberCalendar: 'main' | 'secondary' = null;
   @Prop({ reflect: true, mutable: true }) positionRange: PositionRange[] = null; 
@@ -41,6 +48,7 @@ export class CalendarSingle {
   
   @Event({eventName: 'dvn-valueCalendarSelected', bubbles:true, composed: true}) valueCalendarSelected: EventEmitter<any>;
   
+  @Prop({ reflect: true, mutable: true }) setCalendar: CalendarEntry = { month:11, year:2023, day:19 };
   @Watch('setCalendar')
   setCalendarChange(newValue: CalendarEntry, oldValue: CalendarEntry){
     if (newValue !== oldValue) {
@@ -117,6 +125,8 @@ export class CalendarSingle {
   componentWillLoad(){
     this.baseNameMonth = this.monthNames[this.setCalendar.month];
     this.daysInMonth = this.writeMonth();
+    this.dateBackward = this.limitBackward();
+    this.dateForward = this.limitForward();
   }
 
   dayCalendarIsNow(day:number):boolean {
@@ -132,15 +142,73 @@ export class CalendarSingle {
   /*
   **  Desarrollar lógica para limite deseado usando: verifyLimit(day:number)
   */ 
-  private verifyLimit(){
+  private verifyLimit(day: number){
     if ( this.calendarActive || this.typeSelection === 'period' && Array.isArray(this.positionRange)) {
       return true;
+    } else if( this.calendarActive && this.limitDirection && this.limitTotal && this.limitType && this.typeSelection !== 'period'){
+      const givenDate = new Date(this.setCalendar.year, this.setCalendar.month, day);
+      if (givenDate >= this.dateBackward && givenDate <= this.dateForward) {
+        return true
+      }
+      return false;
     }
     return false;
   }
+  
+  private limitBackward(){
+    if ( this.limitDirection === 'forwardAndBackward'
+      || this.limitDirection === 'backward' ) {
+      return this.buildDateLimit(true);      
+    }
+    return null;
+  }
+  
+  private limitForward(){
+    if ( this.limitDirection === 'forwardAndBackward'
+      || this.limitDirection === 'forward' ) {
+      return this.buildDateLimit(false);
+    }
+    return null;
+  }
+
+  /**
+   * 
+   * @param type flag
+   * backward = true;
+   * forward = false;
+   * @returns Date limit
+   */
+  private buildDateLimit(type: boolean):Date{
+    const limit = new Date();
+    if (type) {
+      return this.limitType === 'month'
+      ? new Date(
+        limit.getFullYear(),
+        limit.getMonth() - this.limitTotal, 
+        limit.getDate()
+      )
+      : new Date(
+        limit.getFullYear() - this.limitTotal,
+        limit.getMonth(), 
+        limit.getDate()
+      );
+    } else {
+      return this.limitType === 'month'
+      ? new Date(
+          limit.getFullYear(),
+          limit.getMonth() + this.limitTotal, 
+          limit.getDate()
+        )
+      : new Date(
+          limit.getFullYear() + this.limitTotal,
+          limit.getMonth(), 
+          limit.getDate()
+        );
+    } 
+  }  
 
   daySelectedHandler(day:number){
-    const isInsideLimit = this.verifyLimit();
+    const isInsideLimit = this.verifyLimit(day);
     if (isInsideLimit ) {
       const selectedDate: CalendarEntry = {
         day,
@@ -173,7 +241,7 @@ export class CalendarSingle {
   }
 
   private nameClassToElement(day: number){
-    const classInRange = this.verifyLimit() ? 'in-range' : '';
+    const classInRange = this.verifyLimit(day) ? 'in-range' : '';
     const classIsNow = this.dayCalendarIsNow(day) ? 'is-now' : '';
     let classSelected = ''; 
     let classInsideTheRange = '';

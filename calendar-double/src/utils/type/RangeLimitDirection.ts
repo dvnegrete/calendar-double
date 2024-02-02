@@ -1,0 +1,1 @@
+export type RangeLimitDirection = 'forward' | 'backward' | 'forwardAndBackward' | null;

@@ -273,4 +273,79 @@ describe('calendar-single', () => {
     jest.spyOn(component,'dayCalendarIsNow');
   });
 
+  it('should contains class "in-range" when receives limit of 3 months backward and forward', async () => {
+    const today = new Date();
+    const quantity = 3;
+    const page = await newSpecPage({
+      components: [CalendarSingle],
+      template: ()=> (
+        <calendar-single 
+          typeSelection='oneDay'          
+          setCalendar={ {month: today.getMonth(), year: today.getFullYear(), day: today.getDate() }}
+          limitType='month'
+          limitDirection='forwardAndBackward'
+          limitTotal={ quantity }
+          calendarActive= { true }
+        />
+      ),
+    });
+    const limitBackward = new Date(today.getFullYear(), today.getMonth() - quantity, today.getDate())
+    const evaluateLimitBackward = { day: limitBackward.getDate(), month: limitBackward.getMonth(), year: limitBackward.getFullYear() };
+    const dateBackward = { day: page.rootInstance.dateBackward.getDate(), month: page.rootInstance.dateBackward.getMonth(), year: page.rootInstance.dateBackward.getFullYear() }    
+    expect(dateBackward).toEqual(evaluateLimitBackward);
+
+    const limitForward = new Date(today.getFullYear(), today.getMonth() + quantity, today.getDate())
+    const evaluateLimitForward = { day: limitForward.getDate(), month: limitForward.getMonth(), year: limitForward.getFullYear() };
+    const dateForward = { day: page.rootInstance.dateForward.getDate(), month: page.rootInstance.dateForward.getMonth(), year: page.rootInstance.dateForward.getFullYear() };
+    expect(dateForward).toEqual(evaluateLimitForward);
+  });
+  
+  it('should contains class "in-range" when receives limit of 12 month forward. should dateBackward is null', async () => {
+    const today = new Date();
+    const quantity = 12;
+    const page = await newSpecPage({
+      components: [CalendarSingle],
+      template: ()=> (
+        <calendar-single 
+          typeSelection='oneDay'          
+          setCalendar={ {month: today.getMonth(), year: today.getFullYear(), day: today.getDate() }}
+          limitType='month'
+          limitDirection='forward'
+          limitTotal={ quantity }
+          calendarActive= { true }
+        />
+      ),
+    });    
+    const limitForward = new Date(today.getFullYear(), today.getMonth() + quantity, today.getDate())
+    const evaluateLimitForward = { day: limitForward.getDate(), month: limitForward.getMonth(), year: limitForward.getFullYear() };
+    const dateForward = { day: page.rootInstance.dateForward.getDate(), month: page.rootInstance.dateForward.getMonth(), year: page.rootInstance.dateForward.getFullYear() };
+    expect(dateForward).toEqual(evaluateLimitForward);
+
+    expect(page.rootInstance.dateBackward).toBeNull();
+  });
+ 
+  it('should contains class "in-range" when receives limit of 6 years backward. should dateForward is null', async () => {
+    const today = new Date();
+    const quantity = 6;
+    const page = await newSpecPage({
+      components: [CalendarSingle],
+      template: ()=> (
+        <calendar-single 
+          typeSelection='oneDay'          
+          setCalendar={ {month: today.getMonth(), year: today.getFullYear(), day: today.getDate() }}
+          limitType='year'
+          limitDirection='backward'
+          limitTotal={ quantity }
+          calendarActive= { true }
+        />
+      ),
+    });
+    const limitBackward = new Date(today.getFullYear() - quantity, today.getMonth(), today.getDate())
+    const evaluateLimitBackward = { day: limitBackward.getDate(), month: limitBackward.getMonth(), year: limitBackward.getFullYear() };
+    const dateBackward = { day: page.rootInstance.dateBackward.getDate(), month: page.rootInstance.dateBackward.getMonth(), year: page.rootInstance.dateBackward.getFullYear() }    
+    expect(dateBackward).toEqual(evaluateLimitBackward);
+
+    expect(page.rootInstance.dateForward).toBeNull();
+  });
+
 });

@@ -1,0 +1,1 @@
+export type RangeLimitTotal = number | null;

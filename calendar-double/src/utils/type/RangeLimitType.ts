@@ -1,0 +1,1 @@
+export type RangeLimitType = 'month' | 'year' | null;

@@ -6,9 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CalendarEntry } from "./utils/interfaces/calendarEntry";
-import { PositionRange } from "./utils/type/positionRange";
+import { PositionRange, RangeLimitDirection, RangeLimitTotal, RangeLimitType } from "./utils/type";
 export { CalendarEntry } from "./utils/interfaces/calendarEntry";
-export { PositionRange } from "./utils/type/positionRange";
+export { PositionRange, RangeLimitDirection, RangeLimitTotal, RangeLimitType } from "./utils/type";
 export namespace Components {
     interface CalendarDouble {
         "mainDateReceived": Date;
@@ -19,6 +19,9 @@ export namespace Components {
     interface CalendarSingle {
         "calendarActive": boolean;
         "dateCalendar": CalendarEntry;
+        "limitDirection": RangeLimitDirection;
+        "limitTotal": RangeLimitTotal;
+        "limitType": RangeLimitType;
         "numberCalendar": 'main' | 'secondary';
         "positionRange": PositionRange[];
         "setCalendar": CalendarEntry;
@@ -173,6 +176,9 @@ declare namespace LocalJSX {
     interface CalendarSingle {
         "calendarActive"?: boolean;
         "dateCalendar"?: CalendarEntry;
+        "limitDirection"?: RangeLimitDirection;
+        "limitTotal"?: RangeLimitTotal;
+        "limitType"?: RangeLimitType;
         "numberCalendar"?: 'main' | 'secondary';
         "onDvn-valueCalendarSelected"?: (event: CalendarSingleCustomEvent<any>) => void;
         "positionRange"?: PositionRange[];
