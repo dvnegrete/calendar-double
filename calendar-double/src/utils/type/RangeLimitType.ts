@@ -1,1 +1,1 @@
-export type RangeLimitType = 'month' | 'year' | null;
+export type RangeLimitType = 'month' | 'year';

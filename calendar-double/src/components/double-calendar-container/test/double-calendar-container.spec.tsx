@@ -93,12 +93,12 @@ describe('double-calendar-container', () => {
     const changePeriodSpy = jest.spyOn(component, 'changePeriod');
     component.typeSelection = 'period';
     
-    const imgPreviousPeriod = page.root.shadowRoot.querySelectorAll('img')[0] as HTMLImageElement;
+    const imgPreviousPeriod = page.root.shadowRoot.querySelectorAll('arrow-left-chevron')[0] as HTMLArrowLeftChevronElement;
     imgPreviousPeriod.click();
     await page.waitForChanges();
     expect(changePeriodSpy).toHaveBeenCalledWith(-1);
     
-    const imgNextPeriod = page.root.shadowRoot.querySelectorAll('img')[1] as HTMLImageElement;
+    const imgNextPeriod = page.root.shadowRoot.querySelectorAll('arrow-left-chevron')[1] as HTMLArrowLeftChevronElement;
     imgNextPeriod.click();
     await page.waitForChanges();
     expect(changePeriodSpy).toHaveBeenCalledWith(1);

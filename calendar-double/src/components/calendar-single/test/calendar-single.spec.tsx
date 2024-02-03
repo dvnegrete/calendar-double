@@ -348,4 +348,24 @@ describe('calendar-single', () => {
     expect(page.rootInstance.dateForward).toBeNull();
   });
 
+  it('should contains class "in-range" when receives limit of 1 year backward and forward', async () => {
+    const today = new Date();
+    const quantity = 1;
+    const page = await newSpecPage({
+      components: [CalendarSingle],
+      template: ()=> (
+        <calendar-single 
+          typeSelection='oneDay'
+          setCalendar={ {month: today.getMonth(), year: today.getFullYear(), day: today.getDate() }}
+          limitType='year'
+          limitDirection='forwardAndBackward'
+          limitTotal={ quantity }
+          calendarActive= { true }
+        />
+      ),
+    });
+    expect(page.rootInstance.dateForward).not.toBeNull();
+    expect(page.rootInstance.dateForward).not.toBeNull();
+  });
+
 });

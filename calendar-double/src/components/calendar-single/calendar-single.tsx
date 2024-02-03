@@ -22,8 +22,8 @@ export class CalendarSingle {
   @Prop() limitType: RangeLimitType = null;
   @Prop() limitDirection: RangeLimitDirection = null;
   @Prop() limitTotal: RangeLimitTotal = null;
-  dateBackward;
-  dateForward;
+  dateBackward = this.limitBackward();
+  dateForward = this.limitForward();
 
   @Prop() dateCalendar: CalendarEntry;
   @Prop() numberCalendar: 'main' | 'secondary' = null;
@@ -125,10 +125,9 @@ export class CalendarSingle {
   componentWillLoad(){
     this.baseNameMonth = this.monthNames[this.setCalendar.month];
     this.daysInMonth = this.writeMonth();
-    this.dateBackward = this.limitBackward();
-    this.dateForward = this.limitForward();
+    
   }
-
+  
   dayCalendarIsNow(day:number):boolean {
     const now = new Date();
     const monthNow = now.getMonth();
@@ -143,22 +142,40 @@ export class CalendarSingle {
   **  Desarrollar lógica para limite deseado usando: verifyLimit(day:number)
   */ 
   private verifyLimit(day: number){
-    if ( this.calendarActive || this.typeSelection === 'period' && Array.isArray(this.positionRange)) {
-      return true;
-    } else if( this.calendarActive && this.limitDirection && this.limitTotal && this.limitType && this.typeSelection !== 'period'){
+    if( this.calendarActive && this.limitDirection && this.limitTotal && this.limitType && this.typeSelection !== 'period'){
       const givenDate = new Date(this.setCalendar.year, this.setCalendar.month, day);
-      if (givenDate >= this.dateBackward && givenDate <= this.dateForward) {
-        return true
+      switch (this.limitDirection) {
+        case 'backward':
+          return this.verifyWithBackward(givenDate);
+          case 'forward':
+          return this.verifyWithForward(givenDate);
+          case 'forwardAndBackward':
+          default:
+            const isBackward = this.verifyWithBackward(givenDate);
+            const isForward = this.verifyWithForward(givenDate);
+            return isBackward || isForward;
       }
-      return false;
     }
+    else if ( this.calendarActive || this.typeSelection === 'period' && Array.isArray(this.positionRange)) {
+      return true;
+    } 
     return false;
+  }
+
+  verifyWithBackward(givenDate: Date){
+    return givenDate >= this.dateBackward && givenDate <= new Date();
+  }
+  
+  verifyWithForward(givenDate: Date){
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    return givenDate <= this.dateForward && givenDate >= today;
   }
   
   private limitBackward(){
     if ( this.limitDirection === 'forwardAndBackward'
       || this.limitDirection === 'backward' ) {
-      return this.buildDateLimit(true);      
+      return this.buildDateLimit(true);
     }
     return null;
   }

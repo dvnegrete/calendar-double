@@ -1,6 +1,7 @@
 import { Component, Element, Event, EventEmitter, Host, Listen, State, h } from '@stencil/core';
 import { CalendarEntry } from '../../utils/interfaces/calendarEntry';
 import { CONSTANTS } from '../shared/constants';
+import { RotationSVG } from '../../utils/enums/RotationSVG';
 
 @Component({
   tag: 'double-calendar-container',
@@ -20,7 +21,7 @@ export class DoubleCalendarContainer {
   @State() assignDate:Date = new Date();
   @State() dateForPeriods:Date = new Date();
   @State() arrayPeriods:CalendarEntry[] = [];
-  @State() countDaysSelected = 0;
+  @State() countDaysSelected:number = 0;
   @State() buttonContinue = false;
   @State() typeSelection: 'oneDay' | 'range' | 'period' = 'oneDay';
 
@@ -76,7 +77,7 @@ export class DoubleCalendarContainer {
   private countSelectedDays(firstSelection:Date, lastSelection: Date){    
     const diffInMls = lastSelection.getTime() - firstSelection.getTime();
     const diffInDays = diffInMls / (1000 * 60 * 60 * 24);
-    this.countDaysSelected = Math.abs(diffInDays) + 1;
+    this.countDaysSelected =Math.round(Math.abs(diffInDays) + 1);
   }
 
   private calculateLastDayOfMonth(year: number, month: number):number {
@@ -224,25 +225,32 @@ export class DoubleCalendarContainer {
             class='calendar'
             typeSelection={ this.typeSelection }
             mainDateReceived={ this.assignDate }
+            limitType='month'
+            limitDirection='forwardAndBackward'
+            limitTotal={ 3 }
           />          
 
           <div class={this.typeSelection === 'period' ? 'period-list' : 'period-list disabled'}>
-              <img 
-                src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg"
-                alt="anterior"
+              <arrow-left-chevron 
+                rotation={ RotationSVG.Up } 
+                height={ 17 } 
+                width={ 20 }
+                inactive= {this.typeSelection !== 'period'}
                 onClick={ ()=>this.changePeriod(-1) }
-              />
+                />
               <form >
                 { this.renderForm() }
               </form>
-              <img 
-                src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg"
-                alt="siguiente"
+              <arrow-left-chevron 
+                rotation={ RotationSVG.Down } 
+                height={ 17 } 
+                width={ 20 }
+                inactive= {this.typeSelection !== 'period'}
                 onClick={ ()=>this.changePeriod(1) }
               />
           </div>
 
-          <p class='counter-days'>Dias seleccionados: <span>{this.countDaysSelected}</span></p>
+          <p class='counter-days'>Dias seleccionados: <span>{ this.countDaysSelected }</span></p>
 
           <button class='go-today' onClick={ ()=> this.goToToday()}>Ir a hoy</button>
 

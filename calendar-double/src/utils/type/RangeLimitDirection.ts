@@ -1,1 +1,1 @@
-export type RangeLimitDirection = 'forward' | 'backward' | 'forwardAndBackward' | null;
+export type RangeLimitDirection = 'forward' | 'backward' | 'forwardAndBackward';

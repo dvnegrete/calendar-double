@@ -42,6 +42,7 @@
   padding: 3px 0;
   text-align: center;
   font-size: 0.7rem;
+  color: var(--inactive-color);
 }
 
 .days-in-month li:nth-child(7n + 1){
@@ -71,13 +72,13 @@ li.selected:nth-child(7n + 7){
   border-radius: 50%;
 }
 
-.in-range {
+.days-in-month .in-range {
   color: var(--font-color, rgb(50, 50, 50));
   cursor: pointer;
   border-radius: 50%;
 }
 
-.is-now {
+.days-in-month .is-now {
   border: solid 1px var(--secondary-color, #0075c0);
   width: 21px;
   border-radius: 50%;

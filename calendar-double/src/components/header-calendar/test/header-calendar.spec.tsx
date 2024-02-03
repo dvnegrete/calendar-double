@@ -32,16 +32,11 @@ describe('header-calendar', () => {
         <mock:shadow-root>
           <header>
             <div class="button-next">
-              <img 
-                src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/left-chevron.svg" 
-                alt="atras"
-              />
+              <arrow-left-chevron/>
             </div>
             <span></span>
               <div class="button-next">
-                <img 
-                src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg" 
-                alt="siguiente" />
+                <arrow-left-chevron rotation="180"/>
               </div>
           </header>
         </mock:shadow-root>
@@ -59,16 +54,11 @@ describe('header-calendar', () => {
         <mock:shadow-root>
           <header>
             <div class="button-next hidden">
-              <img 
-                src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/left-chevron.svg" 
-                alt="atras"
-              />
+              <arrow-left-chevron inactive=""/>
             </div>
             <span class="inactive"></span>
               <div class="button-next hidden">
-                <img 
-                src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg" 
-                alt="siguiente" />
+                <arrow-left-chevron rotation="180" inactive=""/>
               </div>
           </header>
         </mock:shadow-root>

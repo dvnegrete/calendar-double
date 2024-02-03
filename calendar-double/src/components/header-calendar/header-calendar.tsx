@@ -1,4 +1,5 @@
 import { Component, Event, EventEmitter, Prop, h } from '@stencil/core';
+import { RotationSVG } from '../../utils/enums/RotationSVG';
 
 @Component({
   tag: 'header-calendar',
@@ -18,11 +19,16 @@ export class HeaderCalendar {
     return (
       <div 
         class={this.nameInactive ? 'button-next hidden': 'button-next'} 
-        onClick={ ()=> this.previousMonthCalendar.emit() }>
-          <img 
-            src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/left-chevron.svg" 
-            alt="atras"
-          />
+        onClick={ ()=> {
+            if(!this.nameInactive) {
+              this.previousMonthCalendar.emit();
+            }
+          }
+        }
+      >
+        <arrow-left-chevron 
+          inactive= { this.nameInactive }
+        />
       </div>
     )
   }
@@ -30,11 +36,18 @@ export class HeaderCalendar {
   headerRight(){
     return (
       <div 
-        class={this.nameInactive ? 'button-next hidden': 'button-next'} 
-        onClick={ ()=> this.nextMonthCalendar.emit() }>
-          <img 
-          src="https://github-personal-dvn.s3.us-east-2.amazonaws.com/img/right-chevron.svg" 
-          alt="siguiente" />
+        class={this.nameInactive ? 'button-next hidden': 'button-next'}
+        onClick={ ()=> {
+            if(!this.nameInactive) {
+              this.nextMonthCalendar.emit();
+            }
+          }
+        }
+      >
+        <arrow-left-chevron 
+          rotation={RotationSVG.Right}
+          inactive= { this.nameInactive }
+        />
       </div>
     );
   }

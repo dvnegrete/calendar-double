@@ -1,1 +1,1 @@
-export type RangeLimitTotal = number | null;
+export type RangeLimitTotal = number;

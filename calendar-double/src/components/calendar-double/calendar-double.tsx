@@ -1,6 +1,6 @@
 import { Component, Event, EventEmitter, Host, Listen, Prop, State, Watch, h } from '@stencil/core';
 import { CalendarEntry } from './../../utils/interfaces/calendarEntry';
-import { PositionRange } from '../../utils/type/positionRange';
+import { PositionRange, RangeLimitDirection, RangeLimitTotal, RangeLimitType } from '../../utils/type';
 
 @Component({
   tag: 'calendar-double',
@@ -24,6 +24,10 @@ export class CalendarDouble {
   @State() positionRangeMain: PositionRange[] = null;
   @State() positionRangeSecondary: PositionRange[] = null;
 
+  @Prop() limitType: RangeLimitType = null;
+  @Prop() limitDirection: RangeLimitDirection = null;
+  @Prop() limitTotal: RangeLimitTotal = null;
+
   @Prop( { mutable:true } ) mainDateReceived:Date = null;
   @Watch('mainDateReceived')
   handlerChangeDateReceived(){
@@ -45,6 +49,7 @@ export class CalendarDouble {
 
   @Listen('dvn-previousMonthCalendar')
   previousMonthCalendarEvent(){
+    // create function for continue or not, depending of limit Range.
     this.cleanPreviousSelection();
     this.setCalendarMain = {
       day: this.setCalendarSecond.day,
@@ -56,6 +61,7 @@ export class CalendarDouble {
 
   @Listen('dvn-nextMonthCalendar')
   nextMonthCalendarEvent(){
+    // create function for continue or not, depending of limit Range.
     this.cleanPreviousSelection();
     this.setCalendarMain = {
       day: this.setCalendarMain.day,
@@ -238,6 +244,9 @@ export class CalendarDouble {
           calendarActive= {this.calendarActive}
           setCalendar={this.setCalendarSecond}
           positionRange={this.positionRangeSecondary}
+          limitType={ this.limitType }
+          limitDirection={ this.limitDirection }
+          limitTotal={ this.limitTotal }
         />
         <calendar-single
           typeSelection={ this.typeSelectionMain }
@@ -245,6 +254,9 @@ export class CalendarDouble {
           calendarActive= {this.calendarActive}
           setCalendar={this.setCalendarMain}
           positionRange={this.positionRangeMain}
+          limitType={ this.limitType }
+          limitDirection={ this.limitDirection }
+          limitTotal={ this.limitTotal }
         />
       </Host>
     );

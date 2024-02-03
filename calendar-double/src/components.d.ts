@@ -5,12 +5,26 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CalendarEntry } from "./utils/interfaces/calendarEntry";
+import { RotationSVG } from "./utils/enums/RotationSVG";
 import { PositionRange, RangeLimitDirection, RangeLimitTotal, RangeLimitType } from "./utils/type";
-export { CalendarEntry } from "./utils/interfaces/calendarEntry";
+import { CalendarEntry } from "./utils/interfaces/calendarEntry";
+export { RotationSVG } from "./utils/enums/RotationSVG";
 export { PositionRange, RangeLimitDirection, RangeLimitTotal, RangeLimitType } from "./utils/type";
+export { CalendarEntry } from "./utils/interfaces/calendarEntry";
 export namespace Components {
+    interface ArrowLeftChevron {
+        "height": number;
+        "inactive": boolean;
+        /**
+          * @Prop () rotation enum RotationSVG
+         */
+        "rotation": RotationSVG;
+        "width": number;
+    }
     interface CalendarDouble {
+        "limitDirection": RangeLimitDirection;
+        "limitTotal": RangeLimitTotal;
+        "limitType": RangeLimitType;
         "mainDateReceived": Date;
         "typeSelection": 'oneDay' | 'range' | 'period';
     }
@@ -68,6 +82,12 @@ export interface HeaderCalendarCustomEvent<T> extends CustomEvent<T> {
     target: HTMLHeaderCalendarElement;
 }
 declare global {
+    interface HTMLArrowLeftChevronElement extends Components.ArrowLeftChevron, HTMLStencilElement {
+    }
+    var HTMLArrowLeftChevronElement: {
+        prototype: HTMLArrowLeftChevronElement;
+        new (): HTMLArrowLeftChevronElement;
+    };
     interface HTMLCalendarDoubleElementEventMap {
         "dvn-calendarDoubleSetDate": CalendarEntry;
         "dvn-applicationDate": CalendarEntry;
@@ -155,6 +175,7 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "arrow-left-chevron": HTMLArrowLeftChevronElement;
         "calendar-double": HTMLCalendarDoubleElement;
         "calendar-input-selection": HTMLCalendarInputSelectionElement;
         "calendar-single": HTMLCalendarSingleElement;
@@ -164,7 +185,19 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface ArrowLeftChevron {
+        "height"?: number;
+        "inactive"?: boolean;
+        /**
+          * @Prop () rotation enum RotationSVG
+         */
+        "rotation"?: RotationSVG;
+        "width"?: number;
+    }
     interface CalendarDouble {
+        "limitDirection"?: RangeLimitDirection;
+        "limitTotal"?: RangeLimitTotal;
+        "limitType"?: RangeLimitType;
         "mainDateReceived"?: Date;
         "onDvn-applicationDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
         "onDvn-calendarDoubleSetDate"?: (event: CalendarDoubleCustomEvent<CalendarEntry>) => void;
@@ -215,6 +248,7 @@ declare namespace LocalJSX {
         "middle"?: string;
     }
     interface IntrinsicElements {
+        "arrow-left-chevron": ArrowLeftChevron;
         "calendar-double": CalendarDouble;
         "calendar-input-selection": CalendarInputSelection;
         "calendar-single": CalendarSingle;
@@ -227,6 +261,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "arrow-left-chevron": LocalJSX.ArrowLeftChevron & JSXBase.HTMLAttributes<HTMLArrowLeftChevronElement>;
             "calendar-double": LocalJSX.CalendarDouble & JSXBase.HTMLAttributes<HTMLCalendarDoubleElement>;
             "calendar-input-selection": LocalJSX.CalendarInputSelection & JSXBase.HTMLAttributes<HTMLCalendarInputSelectionElement>;
             "calendar-single": LocalJSX.CalendarSingle & JSXBase.HTMLAttributes<HTMLCalendarSingleElement>;

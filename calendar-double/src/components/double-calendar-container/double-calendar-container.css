@@ -75,17 +75,10 @@
   padding: 15% 0 15% 4%;
 }
 
-.period-list img {
-  rotate: 270deg;
-  height: 17px;
-  width: 20px;
+/* .period-list svg {  
   padding: 5px 0;
   cursor: pointer;
-}
-
-.period-list img:last-child {
-  rotate: 90deg;  
-}
+} */
 
 .period-list form {
   border-left: 1px solid var(--inactive-color, rgb(179,179,179));
