@@ -1,6 +1,13 @@
 ### Calendar-double
 Proyecto creado en StencilJS. Calendario doble para selecionar por periodo de varios dias o por mes completo
 
+# Instalacíon y uso
+https://www.npmjs.com/package/dvn-calendar-double
+
+```bash
+npm i dvn-calendar-double
+```
+
 ## Use Web-Component
 ```bash
 <calendar-input-selection></calendar-input-selection>
